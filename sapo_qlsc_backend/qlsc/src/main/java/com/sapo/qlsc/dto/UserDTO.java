@@ -31,6 +31,16 @@ public class UserDTO extends BaseDTO{
 
     private List<MaintenanceCardDTO> coordinatorMaintenanceCards;
 
+    private int messageNumber;
+
+    public int getMessageNumber() {
+        return messageNumber;
+    }
+
+    public void setMessageNumber(int messageNumber) {
+        this.messageNumber = messageNumber;
+    }
+
     public String getCode() {
         return code;
     }

@@ -6,6 +6,7 @@ import com.sapo.qlsc.converter.PaymentHistoryConverter;
 import com.sapo.qlsc.dto.MaintenanceCardDTO;
 import com.sapo.qlsc.dto.PaymentHistoryDTO;
 import com.sapo.qlsc.entity.MaintenanceCard;
+import com.sapo.qlsc.entity.Message;
 import com.sapo.qlsc.entity.PaymentHistory;
 import com.sapo.qlsc.exception.commonException.NotFoundException;
 import com.sapo.qlsc.exception.commonException.UnknownException;
@@ -13,6 +14,7 @@ import com.sapo.qlsc.exception.maintenanceCardException.MoneyExceedException;
 import com.sapo.qlsc.model.MessageModel;
 import com.sapo.qlsc.model.PaymentHistoryByIdCustomer;
 import com.sapo.qlsc.repository.MaintenanceCardRepository;
+import com.sapo.qlsc.repository.MessageRepository;
 import com.sapo.qlsc.repository.PaymentHistoryRepository;
 import com.sapo.qlsc.service.PaymentHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     @Override
     public MaintenanceCardDTO insertPaymentHistory(List<PaymentHistoryDTO> paymentHistoryDTOs) throws NotFoundException, MoneyExceedException {
         Long total = Long.valueOf(0);
@@ -56,6 +61,7 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
 //                maintenanceCardId = Long.valueOf(-1);
 //            }
 //        }
+        Date now = new Date();
         MaintenanceCard maintenanceCard = maintenanceCardRepository.findById(paymentHistoryDTOs.get(0).getMaintenanceCard().getId()).orElse(null);
         if (maintenanceCard != null) {
             for (PaymentHistory paymentHistory1 : maintenanceCard.getPaymentHistories()) {
@@ -64,7 +70,6 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
             }
             for (PaymentHistoryDTO paymentHistoryDTO : paymentHistoryDTOs) {
                 PaymentHistory paymentHistory = paymentHistoryConverter.convertToEntity(paymentHistoryDTO);
-                Date now = new Date();
                 paymentHistory.setCreatedDate(now);
                 paymentHistory.setModifiedDate(now);
                 total += paymentHistory.getMoney().longValue();
@@ -93,9 +98,27 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 messageModel.setCode(maintenanceCard.getCode().toString());
                 if (maintenanceCard1.getRepairman() != null) {
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setUser(maintenanceCard1.getRepairman());
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getRepairman().getId(), messageModel);
                 }
                 if (maintenanceCard1.getCoordinator() != null && maintenanceCard1.getCoordinator().getRole() == 1) {
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setUser(maintenanceCard1.getCoordinator());
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getCoordinator().getId(), messageModel);
                 }
                 return maintenanceCardConverter.convertAllToDTO(maintenanceCard1);

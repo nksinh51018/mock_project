@@ -1,0 +1,11 @@
+.activeItem{
+    background-color: rgb(233, 242, 251);
+}
+.message-item-content{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-inline-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    height: 25px;
+}

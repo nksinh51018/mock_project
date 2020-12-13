@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,7 @@ public class MaintenanceCardController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
-                .map(r -> r.getAuthority()).collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         Map<String,Object> allMaintenanceCard = maintenanceCardService.searchMaintenanceCard(maintenanceCardFilter,authentication.getName(),Integer.parseInt(roles.get(0).split("_")[1]));
         return new ResponseEntity(allMaintenanceCard, HttpStatus.OK);
     }
@@ -63,7 +64,7 @@ public class MaintenanceCardController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
-                .map(r -> r.getAuthority()).collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         MaintenanceCardDTO maintenanceCardDTO = maintenanceCardService.getMaintenanceCardById(id,authentication.getName(),Integer.parseInt(roles.get(0).split("_")[1]));
         return new ResponseEntity(maintenanceCardDTO, HttpStatus.OK);
     }
@@ -75,7 +76,7 @@ public class MaintenanceCardController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
-                .map(r -> r.getAuthority()).collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         MaintenanceCardDTO maintenanceCardDTO1 = maintenanceCardService.updateMaintenanceCard(maintenanceCardDTO,authentication.getName(),Integer.parseInt(roles.get(0).split("_")[1]));
         return new ResponseEntity(maintenanceCardDTO1, HttpStatus.OK);
     }
@@ -93,7 +94,7 @@ public class MaintenanceCardController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
-                .map(r -> r.getAuthority()).collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         MaintenanceCardDTO maintenanceCardDTO = maintenanceCardService.updateAllStatusMaintenanceCard(id,authentication.getName(),Integer.parseInt(roles.get(0).split("_")[1]));
         return new ResponseEntity(maintenanceCardDTO, HttpStatus.OK);
     }
@@ -104,7 +105,7 @@ public class MaintenanceCardController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
-                .map(r -> r.getAuthority()).collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         List<MaintenanceCardDTO> maintenanceCardDTOs = new ArrayList<>();
         int n = ids.length;
         for(int i=0;i<n;i++) {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as usersAction from '../../actions/users';
 import User from "../../pages/Login/index";
-
+import React from 'react'
 const UserContainer = (props) => {
     return (
         <User usersActionsCreator={props.usersActionsCreator}

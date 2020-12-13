@@ -45,9 +45,19 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "coordinator",cascade = CascadeType.ALL)
     private List<MaintenanceCard> coordinatorMaintenanceCards;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Message> messages;
+
     @Column(name = "role")
     private byte role;
 
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
 
     public byte getRole() {
         return role;

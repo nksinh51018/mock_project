@@ -52,6 +52,9 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
 
     @Override
     public MaintenanceCardDTO insertMaintenanceCard(MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException {
@@ -114,6 +117,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             MessageModel messageModel = new MessageModel();
             messageModel.setType(1);
             messageModel.setMessage(maintenanceCard.getId().toString());
+            Message message = new Message();
+            message.setStatus((byte) 1);
+            message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+            message.setTitle("Thêm mới phiếu sửa chữa");
+            message.setContent("Một phiếu sửa chữa mới đã được điều phối cho bạn");
+            message.setUser( maintenanceCard1.getRepairman());
+            message.setCreatedDate(now);
+            message.setModifiedDate(now);
+            messageRepository.save(message);
             simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getRepairman().getId(), messageModel);
         }
         return maintenanceCardConverter.convertAllToDTO(maintenanceCard1);
@@ -329,6 +341,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
                 messageModel.setType(2);
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 for(User user : userRepository.getAllManager()){
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đang chờ thanh toán");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được sửa chữa xong và chờ được thanh toán");
+                    message.setUser(user);
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
             }
@@ -338,6 +359,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
                 messageModel.setCode(maintenanceCard.getCode().toString());
                 for(User user : userRepository.getAllManager()){
                     if(user.getId()!= maintenanceCard.getCoordinator().getId()){
+                        Message message = new Message();
+                        message.setStatus((byte) 1);
+                        message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                        message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                        message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật.");
+                        message.setUser(user);
+                        message.setCreatedDate(now);
+                        message.setModifiedDate(now);
+                        messageRepository.save(message);
                         simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                     }
 
@@ -347,6 +377,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             messageModel.setMessage(maintenanceCard.getId().toString());
             messageModel.setCode(maintenanceCard.getCode().toString());
             if(maintenanceCard1.getRepairman() != null){
+                Message message = new Message();
+                message.setStatus((byte) 1);
+                message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật.");
+                message.setUser(maintenanceCard1.getRepairman());
+                message.setCreatedDate(now);
+                message.setModifiedDate(now);
+                messageRepository.save(message);
                 simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getRepairman().getId(), messageModel);
             }
             return maintenanceCardConverter.convertAllToDTO(maintenanceCard1);
@@ -387,6 +426,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
                 messageModel.setType(2);
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 for(User user : userRepository.getAllManager()){
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" chờ được thanh toán");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được sửa chữa xong và chờ thanh toán ");
+                    message.setUser(user);
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
             }
@@ -395,6 +443,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 messageModel.setCode(maintenanceCard.getCode().toString());
                 for(User user : userRepository.getAllManager()){
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setUser(user);
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
             }
@@ -405,6 +462,15 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
 //                simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getRepairman().getId(), messageModel);
 //            }
             if(maintenanceCard1.getCoordinator() != null){
+                Message message = new Message();
+                message.setStatus((byte) 1);
+                message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                message.setUser(maintenanceCard1.getCoordinator());
+                message.setCreatedDate(now);
+                message.setModifiedDate(now);
+                messageRepository.save(message);
                 simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getCoordinator().getId(), messageModel);
             }
             return maintenanceCardConverter.convertAllToDTO(maintenanceCard1);

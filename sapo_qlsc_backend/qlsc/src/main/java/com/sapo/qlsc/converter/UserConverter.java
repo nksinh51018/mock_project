@@ -2,15 +2,21 @@ package com.sapo.qlsc.converter;
 
 import com.sapo.qlsc.dto.UserDTO;
 import com.sapo.qlsc.entity.User;
+import com.sapo.qlsc.service.MessageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserConverter {
-@Autowired MaintenanceCardConverter maintenanceCardConverter;
+    @Autowired
+    MaintenanceCardConverter maintenanceCardConverter;
+
+    @Autowired
+    private MessageService messageService;
+
     public UserDTO convertToDTO(User user) {
-        UserDTO userDTO = new UserDTO();;
+        UserDTO userDTO = new UserDTO();
         userDTO.setCode(user.getCode());
         userDTO.setEmail(user.getEmail());
         userDTO.setFullName(user.getFullName());
@@ -22,11 +28,13 @@ public class UserConverter {
         userDTO.setId(user.getId());
         userDTO.setAddress(user.getAddress());
         userDTO.setRole(user.getRole());
-
+        userDTO.setMessageNumber(messageService.countMessageByUserId(user.getId()));
+        System.out.println(userDTO.getId());
         return userDTO;
     }
+
     public User convertToEntity(UserDTO userDTO) {
-       User user= new User();
+        User user = new User();
         user.setCode(userDTO.getCode());
         user.setEmail(userDTO.getEmail());
         user.setFullName(userDTO.getFullName());
@@ -40,7 +48,8 @@ public class UserConverter {
         user.setRole(userDTO.getRole());
         return user;
     }
-    public UserDTO convertToUserDTOGetAllDependencies(User user){
+
+    public UserDTO convertToUserDTOGetAllDependencies(User user) {
         UserDTO DTO = new UserDTO();
         DTO.setId(user.getId());
         DTO.setCode(user.getCode());

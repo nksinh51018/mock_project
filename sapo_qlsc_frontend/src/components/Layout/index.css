@@ -1,0 +1,7 @@
+.ant-popover{
+    position: fixed !important;
+}
+
+.ant-popover-inner-content{
+    padding: 0 0 !important;
+}

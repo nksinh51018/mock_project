@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
-import { Layout, Menu } from "antd";
+import { Badge, Layout, Menu, Popover } from "antd";
 import {
   MenuFoldOutlined,
   MailOutlined,
-  UserOutlined, CreditCardFilled, ToolFilled, SmileOutlined, ProfileOutlined, FundFilled, IdcardFilled, IdcardOutlined, ProfileFilled, UnorderedListOutlined, PlusCircleOutlined, AppstoreFilled, SplitCellsOutlined
+  UserOutlined,
+  CreditCardFilled,
+  ToolFilled,
+  SmileOutlined,
+  ProfileOutlined,
+  FundFilled,
+  IdcardFilled,
+  IdcardOutlined,
+  ProfileFilled,
+  UnorderedListOutlined,
+  PlusCircleOutlined,
+  AppstoreFilled,
+  SplitCellsOutlined,
 } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import "./index.css";
 import history from "../../history";
 import { connect } from "react-redux";
+import Message from "../Message";
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
-
 
 const Layout1 = (props) => {
   const [state, setState] = useState({
     collapsed: false,
   });
   const [user, setuser] = useState({
-    role: 3
+    role: 3,
   });
 
   useEffect(() => {
-    setuser(props.user)
+    setuser(props.user);
   }, [props.user]);
 
   const height = window.innerHeight;
@@ -33,6 +45,10 @@ const Layout1 = (props) => {
       collapsed: !state.collapsed,
     });
   };
+
+  const handleClickMessage = ()=>{
+
+  }
 
   return (
     <Layout>
@@ -61,16 +77,23 @@ const Layout1 = (props) => {
             top: 60,
           }}
         >
-          <SubMenu key="sub1" icon={<CreditCardFilled />} title="Phiếu sửa chữa">
-            {
-              user.role !== 2 ? (
-                <Menu.Item key="1">
-                  <NavLink to="/admin/maintenanceCards/create" icon={<PlusCircleOutlined />}>
-                    Tạo phiếu sửa chữa
-                  </NavLink>
-                </Menu.Item>
-              ) : <></>
-            }
+          <SubMenu
+            key="sub1"
+            icon={<CreditCardFilled />}
+            title="Phiếu sửa chữa"
+          >
+            {user.role !== 2 ? (
+              <Menu.Item key="1">
+                <NavLink
+                  to="/admin/maintenanceCards/create"
+                  icon={<PlusCircleOutlined />}
+                >
+                  Tạo phiếu sửa chữa
+                </NavLink>
+              </Menu.Item>
+            ) : (
+              <></>
+            )}
 
             <Menu.Item key="2" icon={<UnorderedListOutlined />}>
               <NavLink to="/admin/maintenanceCards">
@@ -89,12 +112,13 @@ const Layout1 = (props) => {
                 </Menu.Item>
               </SubMenu>
             </>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
 
-          {
-            user.role === 3 ?
-              (<>
-                {/* <SubMenu key="sub3" icon={<ToolFilled />} title="Linh kiện">
+          {user.role === 3 ? (
+            <>
+              {/* <SubMenu key="sub3" icon={<ToolFilled />} title="Linh kiện">
                   <Menu.Item key="5" icon={<PlusCircleOutlined />}>
                     <NavLink to="/admin/accessories/create">Tạo linh kiện</NavLink>
                   </Menu.Item>
@@ -110,29 +134,31 @@ const Layout1 = (props) => {
                     <NavLink to="/admin/services">Danh sách dịch vụ</NavLink>
                   </Menu.Item>
                 </SubMenu> */}
-                <SubMenu key="sub4" icon={<ToolFilled />} title="Sản phẩm">
-                  <Menu.Item key="7" icon={<PlusCircleOutlined />}>
-                    <NavLink to="/admin/products/create">Tạo sản phẩm</NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="8" icon={<UnorderedListOutlined />}>
-                    <NavLink to="/admin/products">Danh sách sản phẩm</NavLink>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub5" icon={<IdcardOutlined />} title="Nhân viên">
-                  <Menu.Item key="9" icon={<PlusCircleOutlined />}>
-                    <NavLink to="/admin/employees/create">Tạo nhân viên</NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="10" icon={<UnorderedListOutlined />}>
-                    <NavLink to="/admin/employees">Danh sách nhân viên</NavLink>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub7" icon={<FundFilled />} title="Báo cáo">
-                  <Menu.Item key="13">
-                    <NavLink to="/admin/analytics/dashboard">Tổng quan</NavLink>
-                  </Menu.Item>
-                </SubMenu></>
-              ) : ""
-          }
+              <SubMenu key="sub4" icon={<ToolFilled />} title="Sản phẩm">
+                <Menu.Item key="7" icon={<PlusCircleOutlined />}>
+                  <NavLink to="/admin/products/create">Tạo sản phẩm</NavLink>
+                </Menu.Item>
+                <Menu.Item key="8" icon={<UnorderedListOutlined />}>
+                  <NavLink to="/admin/products">Danh sách sản phẩm</NavLink>
+                </Menu.Item>
+              </SubMenu>
+              <SubMenu key="sub5" icon={<IdcardOutlined />} title="Nhân viên">
+                <Menu.Item key="9" icon={<PlusCircleOutlined />}>
+                  <NavLink to="/admin/employees/create">Tạo nhân viên</NavLink>
+                </Menu.Item>
+                <Menu.Item key="10" icon={<UnorderedListOutlined />}>
+                  <NavLink to="/admin/employees">Danh sách nhân viên</NavLink>
+                </Menu.Item>
+              </SubMenu>
+              <SubMenu key="sub7" icon={<FundFilled />} title="Báo cáo">
+                <Menu.Item key="13">
+                  <NavLink to="/admin/analytics/dashboard">Tổng quan</NavLink>
+                </Menu.Item>
+              </SubMenu>
+            </>
+          ) : (
+            ""
+          )}
           <SubMenu
             style={{
               position: "fixed",
@@ -141,15 +167,36 @@ const Layout1 = (props) => {
             }}
             key="sub6"
             icon={<UserOutlined />}
-            title={user.fullName}
+            title={
+              <span>
+                <Badge
+                  count={user.messageNumber}
+                  overflowCount={10}
+                  offset={[10, -1]}
+                >
+                  <div>{user.fullName}</div>
+                </Badge>
+              </span>
+            }
           >
             <Menu.Item key="12">
-              <div onClick={() => {
-                localStorage.clear();
-                
-                history.push("/login")
-                window.location.reload();
-              }}>Đăng xuất</div>
+              <Popover placement="rightBottom"  content={Message} title="Thông báo" trigger="click" onClick={handleClickMessage}>
+                <Badge count={user.messageNumber} overflowCount={10}>
+                  <div style={{ margin: "0 10px" }}>Thông báo</div>
+                </Badge>
+              </Popover>
+            </Menu.Item>
+            <Menu.Item key="13">
+              <div
+                onClick={() => {
+                  localStorage.clear();
+
+                  history.push("/login");
+                  window.location.reload();
+                }}
+              >
+                Đăng xuất
+              </div>
             </Menu.Item>
           </SubMenu>
         </Menu>
@@ -162,7 +209,7 @@ const Layout1 = (props) => {
             backgroundColor: "#fff",
             position: "fixed",
             width: "100%",
-            zIndex: 99
+            zIndex: 99,
           }}
         >
           {/* {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
@@ -193,8 +240,7 @@ const Layout1 = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.userReducer,
-  }
-}
-
+  };
+};
 
 export default connect(mapStateToProps, null)(Layout1);

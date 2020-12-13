@@ -4,14 +4,12 @@ import com.sapo.qlsc.converter.MaintenanceCardConverter;
 import com.sapo.qlsc.converter.MaintenanceCardDetailConverter;
 import com.sapo.qlsc.dto.MaintenanceCardDTO;
 import com.sapo.qlsc.dto.MaintenanceCardDetailDTO;
-import com.sapo.qlsc.entity.MaintenanceCard;
-import com.sapo.qlsc.entity.MaintenanceCardDetail;
-import com.sapo.qlsc.entity.MaintenanceCardDetailStatusHistory;
-import com.sapo.qlsc.entity.User;
+import com.sapo.qlsc.entity.*;
 import com.sapo.qlsc.exception.commonException.NotFoundException;
 import com.sapo.qlsc.exception.maintenanceCardException.NotFoundRepairmanException;
 import com.sapo.qlsc.model.MessageModel;
 import com.sapo.qlsc.repository.MaintenanceCardDetailRepository;
+import com.sapo.qlsc.repository.MessageRepository;
 import com.sapo.qlsc.repository.UserRepository;
 import com.sapo.qlsc.service.MaintenanceCardDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,9 @@ public class MaintenanceCardDetailServiceImpl implements MaintenanceCardDetailSe
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Override
     public MaintenanceCardDTO updateStatusMaintenanceCardDetail(Long id,String email) throws NotFoundException, NotFoundRepairmanException {
@@ -91,6 +92,15 @@ public class MaintenanceCardDetailServiceImpl implements MaintenanceCardDetailSe
                 messageModel.setType(2);
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 for(User user : userRepository.getAllManager()){
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setUser(user);
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
             }
@@ -99,6 +109,15 @@ public class MaintenanceCardDetailServiceImpl implements MaintenanceCardDetailSe
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 messageModel.setCode(maintenanceCard.getCode().toString());
                 for(User user : userRepository.getAllManager()){
+                    Message message = new Message();
+                    message.setStatus((byte) 1);
+                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đang chờ thanh toán");
+                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã hoàn thành sửa chữa và đang chờ thanh toán");
+                    message.setUser(user);
+                    message.setCreatedDate(now);
+                    message.setModifiedDate(now);
+                    messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
             }

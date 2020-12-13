@@ -5,6 +5,7 @@ const initialState = {
     id: 0,
     fullName: "",
     role: 0,
+    messageNumber: 0,
     stompClient: null
 };
 
@@ -20,7 +21,7 @@ const reducer = (state = initialState, action) => {
             state.id = action.payload.data.id;
             state.fullName = action.payload.data.fullName;
             state.role = action.payload.data.role;
-            
+            state.messageNumber = action.payload.data.messageNumber
             return { ...state }
         default:
             return { ...state };
