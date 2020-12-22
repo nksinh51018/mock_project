@@ -1,11 +1,10 @@
 package com.nk.maintenancecard.controller;
-
-import com.sapo.qlsc.dto.MaintenanceCardDTO;
-import com.sapo.qlsc.dto.PaymentHistoryDTO;
-import com.sapo.qlsc.exception.commonException.NotFoundException;
-import com.sapo.qlsc.exception.maintenanceCardException.MoneyExceedException;
-import com.sapo.qlsc.model.PaymentHistoryByIdCustomer;
-import com.sapo.qlsc.service.PaymentHistoryService;
+import com.nk.maintenancecard.dto.MaintenanceCardDTO;
+import com.nk.maintenancecard.dto.PaymentHistoryDTO;
+import com.nk.maintenancecard.exception.commonException.NotFoundException;
+import com.nk.maintenancecard.exception.maintenanceCardException.MoneyExceedException;
+import com.nk.maintenancecard.model.PaymentHistoryByIdCustomer;
+import com.nk.maintenancecard.service.PaymentHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

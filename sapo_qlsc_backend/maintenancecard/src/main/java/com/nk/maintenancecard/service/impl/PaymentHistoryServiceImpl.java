@@ -1,26 +1,27 @@
 package com.nk.maintenancecard.service.impl;
 
-import com.sapo.qlsc.converter.MaintenanceCardConverter;
-import com.sapo.qlsc.converter.PaymentHistoryConverter;
-import com.sapo.qlsc.dto.MaintenanceCardDTO;
-import com.sapo.qlsc.dto.PaymentHistoryDTO;
-import com.sapo.qlsc.entity.MaintenanceCard;
-import com.sapo.qlsc.entity.Message;
-import com.sapo.qlsc.entity.PaymentHistory;
-import com.sapo.qlsc.exception.commonException.NotFoundException;
-import com.sapo.qlsc.exception.commonException.UnknownException;
-import com.sapo.qlsc.exception.maintenanceCardException.MoneyExceedException;
-import com.sapo.qlsc.model.MessageModel;
-import com.sapo.qlsc.model.PaymentHistoryByIdCustomer;
-import com.sapo.qlsc.repository.MaintenanceCardRepository;
-import com.sapo.qlsc.repository.MessageRepository;
-import com.sapo.qlsc.repository.PaymentHistoryRepository;
-import com.sapo.qlsc.service.PaymentHistoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nk.maintenancecard.converter.MaintenanceCardConverter;
+import com.nk.maintenancecard.converter.PaymentHistoryConverter;
+import com.nk.maintenancecard.dto.MaintenanceCardDTO;
+import com.nk.maintenancecard.dto.PaymentHistoryDTO;
+import com.nk.maintenancecard.entity.MaintenanceCard;
+import com.nk.maintenancecard.entity.PaymentHistory;
+import com.nk.maintenancecard.exception.commonException.NotFoundException;
+import com.nk.maintenancecard.exception.commonException.UnknownException;
+import com.nk.maintenancecard.exception.maintenanceCardException.MoneyExceedException;
+import com.nk.maintenancecard.model.MessageModel;
+import com.nk.maintenancecard.model.PaymentHistoryByIdCustomer;
+import com.nk.maintenancecard.repository.MaintenanceCardRepository;
+import com.nk.maintenancecard.repository.PaymentHistoryRepository;
+import com.nk.maintenancecard.service.PaymentHistoryService;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +43,7 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
     private PaymentHistoryConverter paymentHistoryConverter;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
-    private MessageRepository messageRepository;
+    private KafkaTemplate<String,String> kafkaTemplate;
 
     @Override
     public MaintenanceCardDTO insertPaymentHistory(List<PaymentHistoryDTO> paymentHistoryDTOs) throws NotFoundException, MoneyExceedException {
@@ -92,33 +90,15 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
             try {
                 MaintenanceCard maintenanceCard1 = maintenanceCardRepository.save(maintenanceCard);
                 MessageModel messageModel = new MessageModel();
-                messageModel.setType(3);
-                messageModel.setMessage(maintenanceCard.getId().toString());
-                messageModel.setCode(maintenanceCard.getCode().toString());
-                if (maintenanceCard1.getRepairman() != null) {
-                    Message message = new Message();
-                    message.setStatus((byte) 1);
-                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                    message.setUser(maintenanceCard1.getRepairman());
-                    message.setCreatedDate(now);
-                    message.setModifiedDate(now);
-                    messageRepository.save(message);
-                    simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getRepairman().getId(), messageModel);
-                }
-                if (maintenanceCard1.getCoordinator() != null && maintenanceCard1.getCoordinator().getRole() == 1) {
-                    Message message = new Message();
-                    message.setStatus((byte) 1);
-                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                    message.setUser(maintenanceCard1.getCoordinator());
-                    message.setCreatedDate(now);
-                    message.setModifiedDate(now);
-                    messageRepository.save(message);
-                    simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getCoordinator().getId(), messageModel);
-                }
+                messageModel.setType(2);
+                messageModel.setMaintenanceCardCode(maintenanceCard1.getCode());
+                messageModel.setAuthor(maintenanceCard1.getCoordinatorEmail());
+                messageModel.setCoordinatorEmail(maintenanceCard1.getCoordinatorEmail());
+                messageModel.setRepairmanEmail(maintenanceCard1.getRepairmanEmail());
+                ObjectMapper mapper = new ObjectMapper();
+                String jsonString = mapper.writeValueAsString(messageModel);
+                ProducerRecord<String, String> record = new ProducerRecord<String, String>("qlsc_message", maintenanceCard1.getId()+"", jsonString);
+                kafkaTemplate.send(record);
                 return maintenanceCardConverter.convertAllToDTO(maintenanceCard1);
             } catch (Exception e) {
                 e.printStackTrace();

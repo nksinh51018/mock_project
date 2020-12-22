@@ -1,16 +1,16 @@
 package com.nk.maintenancecard.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sapo.qlsc.dto.MaintenanceCardDTO;
-import com.sapo.qlsc.exception.CodeExistedException;
-import com.sapo.qlsc.exception.commonException.NotFoundException;
-import com.sapo.qlsc.exception.maintenanceCardException.NotEnoughProductException;
-import com.sapo.qlsc.exception.maintenanceCardException.NotFoundRepairmanException;
-import com.sapo.qlsc.exception.maintenanceCardException.NotUpdateException;
-import com.sapo.qlsc.model.MaintenanceCardCustomer;
-import com.sapo.qlsc.model.MaintenanceCardFilter;
-import com.sapo.qlsc.service.MaintenanceCardDetailService;
-import com.sapo.qlsc.service.MaintenanceCardService;
+import com.nk.maintenancecard.dto.MaintenanceCardDTO;
+import com.nk.maintenancecard.exception.CodeExistedException;
+import com.nk.maintenancecard.exception.commonException.NotFoundException;
+import com.nk.maintenancecard.exception.maintenanceCardException.NotEnoughProductException;
+import com.nk.maintenancecard.exception.maintenanceCardException.NotFoundRepairmanException;
+import com.nk.maintenancecard.exception.maintenanceCardException.NotUpdateException;
+import com.nk.maintenancecard.model.MaintenanceCardCustomer;
+import com.nk.maintenancecard.model.MaintenanceCardFilter;
+import com.nk.maintenancecard.service.MaintenanceCardDetailService;
+import com.nk.maintenancecard.service.MaintenanceCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,7 +69,7 @@ public class MaintenanceCardController {
 
     // NV dieu phoi
     @PutMapping("maintenanceCards/{id}")
-    public ResponseEntity<MaintenanceCardDTO> updateMaintenanceCard(@RequestBody MaintenanceCardDTO maintenanceCardDTO,@PathVariable Long id) throws NotEnoughProductException, NotFoundException, CodeExistedException, NotUpdateException {
+    public ResponseEntity<MaintenanceCardDTO> updateMaintenanceCard(@RequestBody MaintenanceCardDTO maintenanceCardDTO,@PathVariable Long id) throws NotEnoughProductException, NotFoundException, CodeExistedException, NotUpdateException, JsonProcessingException {
         maintenanceCardDTO.setId(id);
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -79,7 +79,7 @@ public class MaintenanceCardController {
         return new ResponseEntity(maintenanceCardDTO1, HttpStatus.OK);
     }
     @GetMapping("/maintenanceCards/customer")
-    public ResponseEntity<Map<String,Object>> getMaintenanceCardsByIdCustomer(@ModelAttribute("maintenanceCardCustomer")MaintenanceCardCustomer maintenanceCardCustomer){
+    public ResponseEntity<Map<String,Object>> getMaintenanceCardsByIdCustomer(@ModelAttribute("maintenanceCardCustomer") MaintenanceCardCustomer maintenanceCardCustomer){
         System.out.println(maintenanceCardCustomer);
         Map<String,Object> allMaintenanceCards = maintenanceCardService.getMaintenanceCardByIdCustomer(maintenanceCardCustomer);
         return new ResponseEntity<>(allMaintenanceCards, HttpStatus.OK);
@@ -88,7 +88,7 @@ public class MaintenanceCardController {
 
     // Kiem tra quyen : NV sua chua
     @PutMapping("maintenanceCards/workStatus/{id}")
-    public ResponseEntity<MaintenanceCardDTO> updateWorkStatusMaintenanceCard(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException {
+    public ResponseEntity<MaintenanceCardDTO> updateWorkStatusMaintenanceCard(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException, JsonProcessingException {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
@@ -99,7 +99,7 @@ public class MaintenanceCardController {
 
     // Kiem tra quyen : NV sua chua
     @PutMapping(path = "maintenanceCards/workStatus",consumes = MediaType.ALL_VALUE)
-    public ResponseEntity updateMultiAllWorkStatusMaintenanceCard(@RequestBody  Long[] ids) throws NotFoundException, NotFoundRepairmanException {
+    public ResponseEntity updateMultiAllWorkStatusMaintenanceCard(@RequestBody  Long[] ids) throws NotFoundException, NotFoundRepairmanException, JsonProcessingException {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         List<String> roles = authentication.getAuthorities().stream()
@@ -115,7 +115,7 @@ public class MaintenanceCardController {
 
     // Kiem tra quyen : NV sua chua
     @PutMapping("maintenanceCardDetails/status/{id}")
-    public ResponseEntity<MaintenanceCardDTO> updateStatusMaintenanceCardDetail(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException {
+    public ResponseEntity<MaintenanceCardDTO> updateStatusMaintenanceCardDetail(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException, JsonProcessingException {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         MaintenanceCardDTO maintenanceCardDTO = maintenanceCardDetailService.updateStatusMaintenanceCardDetail(id,authentication.getName());
@@ -123,12 +123,8 @@ public class MaintenanceCardController {
     }
 
     @DeleteMapping("maintenanceCards/{id}")
-    public ResponseEntity<Boolean> deleteMaintenanceCard(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException, NotEnoughProductException {
+    public ResponseEntity<Boolean> deleteMaintenanceCard(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException, NotEnoughProductException, JsonProcessingException {
         boolean check = maintenanceCardService.deleteMaintenanceCard(id);
         return new ResponseEntity(check, HttpStatus.OK);
-    }
-    @GetMapping("/maintenanceCards/Plates/{idCustomer}")
-    public ResponseEntity<List<String>> getPlatesNumberByCustomerId(@PathVariable("idCustomer") Long idCustomer) {
-        return new ResponseEntity<>(maintenanceCardService.getPlatesNumberByCustomerId(idCustomer),HttpStatus.OK);
     }
 }

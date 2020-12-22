@@ -25,32 +25,30 @@ public interface MaintenanceCardRepository extends JpaRepository<MaintenanceCard
             ";", nativeQuery = true)
     public int checkCode(@Param("code") String code, @Param("id") Long id);
 
-    @Query("SELECT distinct wc FROM MaintenanceCard wc, User u WHERE wc.code LIKE %?1% " +
+    @Query("SELECT distinct wc FROM MaintenanceCard wc WHERE wc.code LIKE %?1% " +
             "AND wc.workStatus IN  ?2 " +
             "AND wc.payStatus IN  ?3 " +
-            "AND (wc.repairman = u.id or wc.coordinator = u.id) " +
-            "AND (u.email = ?4 or ?5 = 3)")
+            "AND (wc.repairmanEmail = ?4 or wc.coordinatorEmail = ?4 or ?5 = 3) ")
     Page<MaintenanceCard> search(Pageable pageable, String keyWork, byte[] workStatus, byte[] payStatus, String email, int role);
 
-    @Query("SELECT distinct wc FROM MaintenanceCard wc, User u WHERE wc.id = :id " +
-            "AND (wc.repairman = u.id or wc.coordinator = u.id) " +
-            "AND (u.email = :email or :role = 3)")
+    @Query("SELECT distinct wc FROM MaintenanceCard wc WHERE wc.id = :id " +
+            "AND (wc.repairmanEmail = :email or wc.coordinatorEmail = :email or :role = 3) ")
     MaintenanceCard getMaintenanceCardByIdAndEmail(@Param("id") Long id, @Param("email") String email, @Param("role") int role);
 
-    @Query("SELECT distinct wc FROM MaintenanceCard wc, User u WHERE wc.id = :id " +
-            "AND (wc.coordinator = u.id) " +
-            "AND u.email = :email and (:role = 1 or :role = 3)")
+    @Query("SELECT distinct wc FROM MaintenanceCard wc WHERE wc.id = :id " +
+            "AND (wc.coordinatorEmail = :email) " +
+            "and (:role = 1 or :role = 3)")
     MaintenanceCard getMaintenanceCardByIdAndCoordinatorEmail(@Param("id") Long id, @Param("email") String email, @Param("role") int role);
 
-    @Query("SELECT distinct wc FROM MaintenanceCard wc, User u WHERE wc.id = :id " +
-            "AND (wc.repairman = u.id) " +
-            "AND u.email = :email and :role = 2")
+    @Query("SELECT distinct wc FROM MaintenanceCard wc WHERE wc.id = :id " +
+            "AND (wc.repairmanEmail = :email) " +
+            "and :role = 2")
     MaintenanceCard getMaintenanceCardByIdAndRepairmanEmail(@Param("id") Long id, @Param("email") String email, @Param("role") int role);
 
-    @Query("SELECT m FROM MaintenanceCard  m, Customer c WHERE m.customer.id = c.id AND m.customer.id = ?1 AND m.code LIKE %?2% AND m.payStatus IN  ?3 AND m.workStatus IN ?4")
+    @Query("SELECT m FROM MaintenanceCard  m WHERE m.customerId = ?1 AND m.code LIKE %?2% AND m.payStatus IN  ?3 AND m.workStatus IN ?4")
     Page<MaintenanceCard> getMaintenanceCardByIdCustomer(Pageable pageable, Long id, String keyWork, byte[] payStatus, byte[] workStatus);
 
-    @Query(value = "select m from MaintenanceCard m where (m.repairman.id =:userId or m.coordinator =:userId) and m.code like %:code%")
+    @Query(value = "select m from MaintenanceCard m where (m.repairmanId =:userId or m.coordinatorId =:userId) and m.code like %:code%")
     Page<MaintenanceCard> getMaintenanceCardByRepairMan(Pageable pageable, Long userId, String code);
 
 	@Query(value = "SELECT SUM(money) as totalMoney FROM payment_histories where modified_date BETWEEN ?1 AND ?2", nativeQuery = true)
@@ -64,11 +62,9 @@ public interface MaintenanceCardRepository extends JpaRepository<MaintenanceCard
     @Query(value = "SELECT COUNT(mc.id) as totalMoney FROM maintenance_cards mc where mc.created_date BETWEEN ?1 AND ?2", nativeQuery = true)
     int getTotalMaintenanceCard(Date startDate, Date endDate);
 
-    @Query(value = "select m from MaintenanceCard m where m.code like %:code% and (m.repairman.id =:userId or m.coordinator =:userId) "
+    @Query(value = "select m from MaintenanceCard m where m.code like %:code% and (m.repairmanId =:userId or m.coordinatorId =:userId) "
             + "AND (m.workStatus  In :workstatus ) " +
             "AND (m.payStatus  In :paystatus  )")
     Page<MaintenanceCard> filterByWsandPs(Pageable pageable, @Param("userId") Long userId, @Param("workstatus") byte[] workstatus, @Param("paystatus") byte[] paystatus,@Param("code") String code);
-    @Query(value = "select distinct m.platesNumber from MaintenanceCard m where m.customer.id =:id")
-    public List<String> getPlatesNumberByCustomerId(@Param("id")Long id);
 
 }
