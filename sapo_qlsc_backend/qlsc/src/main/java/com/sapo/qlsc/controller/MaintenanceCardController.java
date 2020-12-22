@@ -1,5 +1,6 @@
 package com.sapo.qlsc.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sapo.qlsc.dto.MaintenanceCardDTO;
 import com.sapo.qlsc.dto.MaintenanceCardDetailDTO;
 import com.sapo.qlsc.entity.MaintenanceCardDetail;
@@ -40,7 +41,7 @@ public class MaintenanceCardController {
     private MaintenanceCardDetailService maintenanceCardDetailService;
     // Kiem tra quyen: NV dieu phoi
     @PostMapping("maintenanceCards")
-    public ResponseEntity<MaintenanceCardDTO> insertMaintenanceCard(@RequestBody MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException {
+    public ResponseEntity<MaintenanceCardDTO> insertMaintenanceCard(@RequestBody MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException, JsonProcessingException {
 
         MaintenanceCardDTO maintenanceCardDTO1 = maintenanceCardService.insertMaintenanceCard(maintenanceCardDTO);
         return new ResponseEntity(maintenanceCardDTO1, HttpStatus.OK);

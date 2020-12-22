@@ -1,5 +1,7 @@
 package com.sapo.qlsc.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sapo.qlsc.converter.MaintenanceCardConverter;
 import com.sapo.qlsc.dto.MaintenanceCardDTO;
 import com.sapo.qlsc.entity.*;
@@ -11,6 +13,7 @@ import com.sapo.qlsc.exception.customerException.DupplicateFieldException;
 import com.sapo.qlsc.exception.maintenanceCardException.NotEnoughProductException;
 import com.sapo.qlsc.exception.maintenanceCardException.NotFoundRepairmanException;
 import com.sapo.qlsc.exception.maintenanceCardException.NotUpdateException;
+import com.sapo.qlsc.kafka.ProductModel;
 import com.sapo.qlsc.model.MaintenanceCardCustomer;
 import com.sapo.qlsc.model.MaintenanceCardFilter;
 import com.sapo.qlsc.model.MessageModel;
@@ -18,13 +21,17 @@ import com.sapo.qlsc.repository.*;
 import com.sapo.qlsc.service.MaintenanceCardService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -55,9 +62,12 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
     @Autowired
     private MessageRepository messageRepository;
 
+    @Autowired
+    private KafkaTemplate<String,String> kafkaTemplate;
+
 
     @Override
-    public MaintenanceCardDTO insertMaintenanceCard(MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException {
+    public MaintenanceCardDTO insertMaintenanceCard(MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException, JsonProcessingException {
         MaintenanceCard maintenanceCard = maintenanceCardConverter.convertToEntity(maintenanceCardDTO);
         Date now = new Date();
         maintenanceCard.setCreatedDate(now);
@@ -75,6 +85,13 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
                 int quantity = product.getQuantity() - maintenanceCardDetail.getQuantity();
                 if (quantity >= 0 && maintenanceCardDetail.getQuantity() > 0) {
                     product.setQuantity(product.getQuantity() - maintenanceCardDetail.getQuantity());
+                    ProductModel productModel = new ProductModel();
+                    productModel.setAmountChargeInUnit(1);
+                    productModel.setCode("MC001");
+                    ObjectMapper mapper = new ObjectMapper();
+                    String jsonString = mapper.writeValueAsString(productModel);
+                    ProducerRecord<String, String> record = new ProducerRecord<String, String>("qlsc_product", product.getId()+"", jsonString);
+                    kafkaTemplate.send(record);
                 } else {
                     throw new NotEnoughProductException(product.getId().toString());
                 }
@@ -106,23 +123,22 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             maintenanceCard.setCode(maintenanceCard.getCode().toLowerCase());
 
         }
-        if(check && maintenanceCard.getMaintenanceCardDetails().size()!=0){
+        if (check && maintenanceCard.getMaintenanceCardDetails().size() != 0) {
             maintenanceCard.setWorkStatus((byte) 2);
-        }
-        else{
+        } else {
             maintenanceCard.setWorkStatus((byte) 0);
         }
         MaintenanceCard maintenanceCard1 = maintenanceCardRepository.save(maintenanceCard);
-        if(maintenanceCard1.getRepairman() != null) {
+        if (maintenanceCard1.getRepairman() != null) {
             MessageModel messageModel = new MessageModel();
             messageModel.setType(1);
             messageModel.setMessage(maintenanceCard.getId().toString());
             Message message = new Message();
             message.setStatus((byte) 1);
-            message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
+            message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
             message.setTitle("Thêm mới phiếu sửa chữa");
             message.setContent("Một phiếu sửa chữa mới đã được điều phối cho bạn");
-            message.setUser( maintenanceCard1.getRepairman());
+            message.setUser(maintenanceCard1.getRepairman());
             message.setCreatedDate(now);
             message.setModifiedDate(now);
             messageRepository.save(message);
@@ -188,7 +204,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
         boolean checkNull = true;
 
         MaintenanceCard maintenanceCard = maintenanceCardConverter.convertToEntity(maintenanceCardDTO);
-        if(maintenanceCard.getMaintenanceCardDetails().size() == 0){
+        if (maintenanceCard.getMaintenanceCardDetails().size() == 0) {
             checkNull = false;
         }
         Date now = new Date();
@@ -303,7 +319,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
         } else {
             maintenanceCard.setWorkStatus(status);
         }
-        if(!checkNull){
+        if (!checkNull) {
             maintenanceCard.setWorkStatus((byte) 0);
         }
         Long temp = Long.valueOf(0);
@@ -318,52 +334,50 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
         maintenanceCard.setCoordinator(maintenanceCardUpdate.getCoordinator());
         maintenanceCard.setCustomer(maintenanceCardUpdate.getCustomer());
         maintenanceCard.setPaymentHistories(maintenanceCardUpdate.getPaymentHistories());
-        if(maintenanceCard.getWorkStatus() != 2 || maintenanceCard.getPayStatus() != 1){
+        if (maintenanceCard.getWorkStatus() != 2 || maintenanceCard.getPayStatus() != 1) {
             maintenanceCard.setReturnDate(null);
-        }
-        else{
-            if(maintenanceCard.getReturnDate() != null){
+        } else {
+            if (maintenanceCard.getReturnDate() != null) {
                 Date returnDate = maintenanceCard.getReturnDate();
-                if(returnDate.compareTo(now) > 0){
+                if (returnDate.compareTo(now) > 0) {
                     throw new UnknownException();
                 }
             }
         }
         maintenanceCard.setPlatesNumber(maintenanceCardUpdate.getPlatesNumber().toLowerCase());
-        if (maintenanceCardUpdate.getRepairman() != null  && maintenanceCardUpdate.getRepairman().getId() != null ) {
+        if (maintenanceCardUpdate.getRepairman() != null && maintenanceCardUpdate.getRepairman().getId() != null) {
             maintenanceCard.setRepairman(maintenanceCardUpdate.getRepairman());
         }
 
         try {
             MaintenanceCard maintenanceCard1 = maintenanceCardRepository.save(maintenanceCard);
             MessageModel messageModel = new MessageModel();
-            if(maintenanceCard1.getWorkStatus() ==2 && maintenanceCard1.getPayStatus() == 0 ){
+            if (maintenanceCard1.getWorkStatus() == 2 && maintenanceCard1.getPayStatus() == 0) {
                 messageModel.setType(2);
                 messageModel.setMessage(maintenanceCard.getId().toString());
-                for(User user : userRepository.getAllManager()){
+                for (User user : userRepository.getAllManager()) {
                     Message message = new Message();
                     message.setStatus((byte) 1);
-                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đang chờ thanh toán");
-                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được sửa chữa xong và chờ được thanh toán");
+                    message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đang chờ thanh toán");
+                    message.setContent("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được sửa chữa xong và chờ được thanh toán");
                     message.setUser(user);
                     message.setCreatedDate(now);
                     message.setModifiedDate(now);
                     messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
-            }
-            else{
+            } else {
                 messageModel.setType(3);
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 messageModel.setCode(maintenanceCard.getCode().toString());
-                for(User user : userRepository.getAllManager()){
-                    if(user.getId()!= maintenanceCard.getCoordinator().getId()){
+                for (User user : userRepository.getAllManager()) {
+                    if (user.getId() != maintenanceCard.getCoordinator().getId()) {
                         Message message = new Message();
                         message.setStatus((byte) 1);
-                        message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                        message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                        message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật.");
+                        message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
+                        message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật");
+                        message.setContent("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật.");
                         message.setUser(user);
                         message.setCreatedDate(now);
                         message.setModifiedDate(now);
@@ -376,12 +390,12 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             messageModel.setType(3);
             messageModel.setMessage(maintenanceCard.getId().toString());
             messageModel.setCode(maintenanceCard.getCode().toString());
-            if(maintenanceCard1.getRepairman() != null){
+            if (maintenanceCard1.getRepairman() != null) {
                 Message message = new Message();
                 message.setStatus((byte) 1);
-                message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật.");
+                message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
+                message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật");
+                message.setContent("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật.");
                 message.setUser(maintenanceCard1.getRepairman());
                 message.setCreatedDate(now);
                 message.setModifiedDate(now);
@@ -408,7 +422,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             for (MaintenanceCardDetail maintenanceCardDetail : maintenanceCard.getMaintenanceCardDetails()) {
                 if (maintenanceCardDetail.getProduct().getType() == 2) {
                     byte dis = 1;
-                    for(byte i = (byte) (maintenanceCardDetail.getStatus() + dis); i <= 2; i++){
+                    for (byte i = (byte) (maintenanceCardDetail.getStatus() + dis); i <= 2; i++) {
                         MaintenanceCardDetailStatusHistory maintenanceCardDetailStatusHistory = new MaintenanceCardDetailStatusHistory();
                         maintenanceCardDetailStatusHistory.setCreatedDate(now);
                         maintenanceCardDetailStatusHistory.setModifiedDate(now);
@@ -422,32 +436,31 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             }
             MaintenanceCard maintenanceCard1 = maintenanceCardRepository.save(maintenanceCard);
             MessageModel messageModel = new MessageModel();
-            if(maintenanceCard1.getWorkStatus() ==2 && maintenanceCard1.getPayStatus() == 0 ){
+            if (maintenanceCard1.getWorkStatus() == 2 && maintenanceCard1.getPayStatus() == 0) {
                 messageModel.setType(2);
                 messageModel.setMessage(maintenanceCard.getId().toString());
-                for(User user : userRepository.getAllManager()){
+                for (User user : userRepository.getAllManager()) {
                     Message message = new Message();
                     message.setStatus((byte) 1);
-                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" chờ được thanh toán");
-                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được sửa chữa xong và chờ thanh toán ");
+                    message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " chờ được thanh toán");
+                    message.setContent("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được sửa chữa xong và chờ thanh toán ");
                     message.setUser(user);
                     message.setCreatedDate(now);
                     message.setModifiedDate(now);
                     messageRepository.save(message);
                     simpMessagingTemplate.convertAndSend("/topic/messages/" + user.getId(), messageModel);
                 }
-            }
-            else{
+            } else {
                 messageModel.setType(3);
                 messageModel.setMessage(maintenanceCard.getId().toString());
                 messageModel.setCode(maintenanceCard.getCode().toString());
-                for(User user : userRepository.getAllManager()){
+                for (User user : userRepository.getAllManager()) {
                     Message message = new Message();
                     message.setStatus((byte) 1);
-                    message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                    message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                    message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
+                    message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật");
+                    message.setContent("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật");
                     message.setUser(user);
                     message.setCreatedDate(now);
                     message.setModifiedDate(now);
@@ -461,12 +474,12 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
 //            if(maintenanceCard1.getRepairman() != null){
 //                simpMessagingTemplate.convertAndSend("/topic/messages/" + maintenanceCard1.getRepairman().getId(), messageModel);
 //            }
-            if(maintenanceCard1.getCoordinator() != null){
+            if (maintenanceCard1.getCoordinator() != null) {
                 Message message = new Message();
                 message.setStatus((byte) 1);
-                message.setUrl("/admin/maintenanceCards/"+maintenanceCard.getId().toString());
-                message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
-                message.setContent("Phiếu sửa chữa "+ maintenanceCard.getCode().toUpperCase() +" đã được cập nhật");
+                message.setUrl("/admin/maintenanceCards/" + maintenanceCard.getId().toString());
+                message.setTitle("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật");
+                message.setContent("Phiếu sửa chữa " + maintenanceCard.getCode().toUpperCase() + " đã được cập nhật");
                 message.setUser(maintenanceCard1.getCoordinator());
                 message.setCreatedDate(now);
                 message.setModifiedDate(now);
@@ -523,7 +536,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
         }
         if ((payStatus != null && payStatus.length > 0) || (workStatus != null && workStatus.length > 0)) {
             System.out.println("filter");
-            page = maintenanceCardRepository.filterByWsandPs(pageable, userId, workStatus, payStatus,code);
+            page = maintenanceCardRepository.filterByWsandPs(pageable, userId, workStatus, payStatus, code);
         } else {
             System.out.println("Not filter");
             page = maintenanceCardRepository.getMaintenanceCardByRepairMan(pageable, userId, code);
@@ -542,10 +555,11 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
     }
 
     @Override
-    public List<String> getPlatesNumberByCustomerId(Long id)  {
+    public List<String> getPlatesNumberByCustomerId(Long id) {
         List<String> listPlates = maintenanceCardRepository.getPlatesNumberByCustomerId(id);
-            return listPlates;
+        return listPlates;
     }
+
     public String createNewCode() throws NotANumberException {
         Long codeNumber = 0L;
         String newCodeString;

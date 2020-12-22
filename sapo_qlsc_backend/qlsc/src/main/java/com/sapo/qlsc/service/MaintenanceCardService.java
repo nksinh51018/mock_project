@@ -1,5 +1,6 @@
 package com.sapo.qlsc.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sapo.qlsc.dto.MaintenanceCardDTO;
 import com.sapo.qlsc.entity.MaintenanceCard;
 import com.sapo.qlsc.exception.CodeExistedException;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 public interface MaintenanceCardService {
 
-     MaintenanceCardDTO insertMaintenanceCard(MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException;
+     MaintenanceCardDTO insertMaintenanceCard(MaintenanceCardDTO maintenanceCardDTO) throws NotEnoughProductException, CodeExistedException, JsonProcessingException;
      Map<String, Object> searchMaintenanceCard(MaintenanceCardFilter maintenanceCardFilter,String email,int role);
      MaintenanceCardDTO getMaintenanceCardById(Long id,String email,int role) throws NotFoundException;
      MaintenanceCardDTO updateMaintenanceCard(MaintenanceCardDTO maintenanceCardDTO,String email,int role) throws NotEnoughProductException, NotFoundException, CodeExistedException, NotUpdateException, UnknownException;

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0daee96a-5bef-4ecc-b585-d4074f3a310d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/controller/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/converter/ProductConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/dto/BaseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/dto/ProductDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/entity/BaseEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/entity/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/entity/ProductHistory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/CodeExistedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/NotANumberException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/commonException/NotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/commonException/UnknownException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/customerException/DataTooLongException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/customerException/DupplicateFieldException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/customerException/EntityNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/maintenanceCardException/MoneyExceedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/maintenanceCardException/NotEnoughProductException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/maintenanceCardException/NotFoundRepairmanException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/maintenanceCardException/NotUpdateException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/productException/InvalidImageTypeException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/productException/ProductNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/exception/userException/DuplicateEmailException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/kafka/KafkaConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/kafka/ProductConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/kafka/ProductModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/model/ProductRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/repository/ProductHistoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/repository/ProductRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/security/JwtConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/security/JwtTokenAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/security/SecurityTokenConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/service/ImageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/service/ProductService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/java/com/nk/product/service/impl/ProductServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/kafka/KafkaConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/kafka/ProductModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/model/ProductRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/ImageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/controller/MessageController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/converter/MessageConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/converter/UserConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/dto/BaseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/dto/MessageDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/dto/PasswordPoJo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/dto/UserDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/entity/BaseEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/entity/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/CodeExistedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/NotANumberException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/commonException/NotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/commonException/UnknownException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/customerException/DataTooLongException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/customerException/DupplicateFieldException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/customerException/EntityNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/maintenanceCardException/MoneyExceedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/maintenanceCardException/NotEnoughProductException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/maintenanceCardException/NotFoundRepairmanException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/maintenanceCardException/NotUpdateException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/productException/InvalidImageTypeException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/productException/ProductNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/exception/userException/DuplicateEmailException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/kafka/KafkaConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/kafka/MessageConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/kafka/MessageModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/kafka/UserConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/repository/MessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/security/JwtConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/security/JwtTokenAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/security/SecurityTokenConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/service/MessageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/service/impl/MessageServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/java/com/nk/user/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../user/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway/src/main/java/com/nk/zuulServer/security/SecurityTokenConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway/src/main/java/com/nk/zuulServer/security/SecurityTokenConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../image/src/main/java/com/nk/image/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../image/src/main/java/com/nk/image/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../image/src/main/java/com/nk/image/security/SecurityTokenConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../image/src/main/java/com/nk/image/security/SecurityTokenConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/product-image1600392873696.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/DemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/DemoApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/controller/MaintenanceCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/controller/MaintenanceCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/repository/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/repository/MessageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/MaintenanceCardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/MaintenanceCardService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/impl/MaintenanceCardServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/impl/MaintenanceCardServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/impl/MessageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/java/com/sapo/qlsc/service/impl/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../qlsc/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../qlsc/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sapo_qlsc_frontend/src/apis/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../sapo_qlsc_frontend/src/apis/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sapo_qlsc_frontend/src/constants/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../sapo_qlsc_frontend/src/constants/api.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.3\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1lvRhem1n4FNRLXMI7BIlIUcupk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../customer" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.nk.customer.entity" />
+      <recent name="com.nk.customer.repository" />
+      <recent name="com.nk.customer.service.impl" />
+      <recent name="com.nk.customer.service" />
+      <recent name="com.nk.customer.controller" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ADMIN\DATN\mock_project\sapo_qlsc_backend\demo\src\main\resources" />
+      <recent name="C:\Users\ADMIN\DATN\mock_project\sapo_qlsc_backend\demo\src\main\java\com\nk\customer\controller" />
+      <recent name="C:\Users\ADMIN\DATN\mock_project\sapo_qlsc_backend\demo\src\main\java\com\nk\customer\service\impl" />
+      <recent name="C:\Users\ADMIN\DATN\mock_project\sapo_qlsc_backend\demo\src\main\java\com\nk\customer\service" />
+      <recent name="C:\Users\ADMIN\DATN\mock_project\sapo_qlsc_backend\demo\src\main\java\com\nk\customer\model" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.CustomerApplication">
+    <configuration name="CustomerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nk.customer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.nk.customer.CustomerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.MaintenanceCardApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.CustomerApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0daee96a-5bef-4ecc-b585-d4074f3a310d" name="Default Changelist" comment="" />
+      <created>1608475698545</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608475698545</updated>
+      <workItem from="1608475703794" duration="6124000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="765" y="204" key="#com.intellij.ide.util.MemberChooser" timestamp="1608484986307">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="204" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1608484986307" />
+    <state x="681" y="264" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1608475913661">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="681" y="264" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1608475913661" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1608485168185">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1608485168185" />
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.1.bottom" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.1.center" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.1.left" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+    <state width="1877" height="282" key="GridCell.Tab.1.right" timestamp="1608485169462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608485169462" />
+  </component>
+</project>

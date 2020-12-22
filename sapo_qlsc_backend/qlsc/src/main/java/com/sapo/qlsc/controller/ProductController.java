@@ -6,6 +6,7 @@ import com.sapo.qlsc.entity.Product;
 import com.sapo.qlsc.exception.NotANumberException;
 import com.sapo.qlsc.exception.productException.InvalidImageTypeException;
 import com.sapo.qlsc.exception.productException.ProductNotFoundException;
+import com.sapo.qlsc.model.ProductRequest;
 import com.sapo.qlsc.service.ProductService;
 import com.sapo.qlsc.upload.Image;
 import org.apache.commons.lang3.StringUtils;
@@ -75,63 +76,9 @@ public class ProductController {
     }
 
     @PostMapping("products")
-    public ResponseEntity<ProductDTO> create(
-            @RequestParam(value = "image", required = false) Optional<MultipartFile> fileOptional,
-            @RequestParam("name") String name,
-            @RequestParam(value = "quantity", required = false) Optional<String> quantityOptional,
-            @RequestParam(value = "unit", required = false) Optional<String> unitOptional,
-            @RequestParam(value = "pricePerUnit", required = false) Optional<String> pricePerUnitOptional,
-            @RequestParam(value = "code", required = false) Optional<String> codeOptional,
-            @RequestParam("description") String description,
-            @RequestParam("type") String type) throws Exception {
-        Product product = new Product();
-        // Upload Image
-        if (fileOptional.isPresent()) {
-            MultipartFile file = fileOptional.get();
-            Image image = new Image(file);
-            product.setImage(image.getImageName());
-        }
-
-        // Generate code
-        String code;
-        if (codeOptional.isEmpty()) {
-            code = productService.createNewCode();
-        } else {
-            code = codeOptional.get();
-            if (productService.isCodeExist(code)) {
-                throw new Exception("This code has already existed");
-            }
-        }
-        product.setCode(code);
-
-        // Get Current date
-        Date date = new Date();
-
-        // Get product data
-        if (productService.isNameExist(name)) {
-            throw new Exception("This name has already existed");
-        }
-        product.setName(name);
-        if (quantityOptional.isPresent()) {
-            product.setQuantity(Integer.parseInt(quantityOptional.get()));
-        }
-        if (unitOptional.isPresent()) {
-            product.setUnit(unitOptional.get());
-        }
-        if (pricePerUnitOptional.isPresent()) {
-            product.setPricePerUnit(new BigDecimal(pricePerUnitOptional.get()));
-        }
-        product.setDescription(description);
-        product.setCreatedDate(date);
-        product.setModifiedDate(date);
-        product.setStatus((byte) 1);
-        if (!StringUtils.isNumeric(type)) {
-            throw new NotANumberException("Type is invalid");
-        }
-        product.setType((byte) (Integer.parseInt(type)));
-
+    public ResponseEntity<ProductDTO> create(ProductRequest productRequest) throws Exception {
         // Create the product
-        ProductDTO productDTO = productService.save(product);
+        ProductDTO productDTO = productService.save(productRequest);
         return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.CREATED);
     }
 
@@ -142,31 +89,8 @@ public class ProductController {
         return new ResponseEntity<byte[]>(imageBytes, HttpStatus.OK);
     }
 
-    private boolean checkImage(String value) {
-        String[] arr = {
-                "image/png",
-                "image/jpeg",
-                "image/jpg"
-        };
-        for (String ele : arr) {
-            if (value.equals(ele)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @PutMapping("products/{id}")
-    public ResponseEntity<ProductDTO> update(
-            @RequestParam(value = "image", required = false) Optional<MultipartFile> fileOptional,
-            @RequestParam("name") String name,
-            @RequestParam(value = "quantity", required = false) Optional<String> quantityOptional,
-            @RequestParam(value = "unit", required = false) Optional<String> unitOptional,
-            @RequestParam(value = "pricePerUnit", required = false) Optional<String> pricePerUnitOptional,
-            @RequestParam(value = "code", required = false) Optional<String> codeOptional,
-            @RequestParam("description") String description,
-            @RequestParam(value = "status", required = false) Optional<String> statusOptional,
-            @RequestParam("type") String type,
+    public ResponseEntity<ProductDTO> update(ProductRequest productRequest,
             @PathVariable("id") String pathId) throws Exception {
 
         // check if path id is numeric and check its existence
@@ -174,67 +98,8 @@ public class ProductController {
             throw new NotANumberException("Invalid product id: the id is not a number");
         }
         Long id = Long.parseLong(pathId);
-        ProductDTO productDTO = productService.getOneById(id);
-        Product product = productConverter.convertToEntity(productDTO);
-
-        // Upload new Image (OPTIONAL)
-        if (fileOptional.isPresent()) {
-            MultipartFile file = fileOptional.get();
-            String[] types = {"image/png", "image/jpg", "image/jpeg"};
-            // Upload image and update product image name
-            if (checkImage(file.getContentType())) {
-                Image image = new Image(file);
-                product.setImage(image.getImageName());
-            } else {
-                throw new InvalidImageTypeException("Invalid image");
-            }
-        }
-
-        if (codeOptional.isPresent()) {
-            String code = codeOptional.get();
-            if (productService.isCodeExistToUpdate(code, id)) {
-                throw new Exception("This code has already existed");
-            }
-            product.setCode(code);
-        }
-
-        // Update product info
-        if (quantityOptional.isPresent()) {
-            String quantity = quantityOptional.get();
-            if (!StringUtils.isNumeric(quantity)) {
-                throw new NotANumberException("The entered quantity is not a number");
-            }
-            product.setQuantity((Integer.parseInt(quantity)));
-        }
-        if (pricePerUnitOptional.isPresent()) {
-            if (!StringUtils.isNumeric(pricePerUnitOptional.get())) {
-                throw new NotANumberException("The entered price is not a number");
-            }
-        }
-        product.setId(id);
-        if (productService.isNameExistToUpdate(name, id)) {
-            throw new Exception("This name has already existed");
-        }
-        product.setName(name);
-        if (unitOptional.isPresent()) {
-            String unit = unitOptional.get();
-            product.setUnit(unit);
-        }
-        if (pricePerUnitOptional.isPresent()) {
-            String pricePerUnit = pricePerUnitOptional.get();
-            product.setPricePerUnit(new BigDecimal((Integer.parseInt(pricePerUnit))));
-        }
-        product.setDescription(description);
-        if (statusOptional.isPresent()) {
-            product.setStatus((byte) Integer.parseInt(statusOptional.get()));
-        }
-        if (!StringUtils.isNumeric(type)) {
-            throw new NotANumberException("Type is invalid");
-        }
-        product.setType((byte) (Integer.parseInt(type)));
-
         // Save product info
-        ProductDTO returnedProductDTO = productService.save(product);
+        ProductDTO returnedProductDTO = productService.update(productRequest,id);
         return new ResponseEntity<ProductDTO>(returnedProductDTO, HttpStatus.OK);
     }
 

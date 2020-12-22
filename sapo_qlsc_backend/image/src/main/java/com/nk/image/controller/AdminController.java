@@ -3,6 +3,7 @@ package com.nk.image.controller;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,24 +18,21 @@ import com.nk.image.service.StorageService;
 @CrossOrigin("*")
 public class AdminController {
 
-	private StorageService storageService;
+    private StorageService storageService;
 
-	@Autowired
-	public AdminController(StorageService storageService) {
-		this.storageService = storageService;
-	}
+    @Autowired
+    public AdminController(StorageService storageService) {
+        this.storageService = storageService;
+    }
 
-	 @PostMapping("/uploadFile")
-	    public boolean uploadFile(@RequestParam("file") MultipartFile file,HttpServletResponse response) {
-	    	String type = file.getContentType();
-	    	System.out.println(type);
-	    	if(type.equals("image/png") || type.equals("image/jpeg")) {
-	    		storageService.store(file);
-	        	//response.addHeader("Access-Control-Allow-Origin", "*");
-	            return true;
-	    	}
-	    	else {
-	    		return false;
-	    	}
-	    }
+    @PostMapping("/uploadFile")
+    public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletResponse response) {
+        String type = file.getContentType();
+        if (type.equals("image/png") || type.equals("image/jpeg")) {
+            storageService.store(file);
+            return StringUtils.cleanPath(file.getOriginalFilename());
+        } else {
+            return null;
+        }
+    }
 }

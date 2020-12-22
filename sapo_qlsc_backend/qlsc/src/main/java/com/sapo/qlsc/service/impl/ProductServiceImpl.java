@@ -4,21 +4,29 @@ import com.sapo.qlsc.converter.ProductConverter;
 import com.sapo.qlsc.dto.ProductDTO;
 import com.sapo.qlsc.entity.Product;
 import com.sapo.qlsc.exception.NotANumberException;
+import com.sapo.qlsc.exception.commonException.UnknownException;
+import com.sapo.qlsc.exception.productException.InvalidImageTypeException;
 import com.sapo.qlsc.exception.productException.ProductNotFoundException;
+import com.sapo.qlsc.model.ProductRequest;
 import com.sapo.qlsc.repository.ProductRepository;
+import com.sapo.qlsc.service.ImageService;
 import com.sapo.qlsc.service.ProductService;
+import com.sapo.qlsc.upload.Image;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +37,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductConverter productConverter;
+
+    @Autowired
+    private ImageService imageService;
 
     @Override
     public Page<ProductDTO> getAll(String search, Pageable pageable) {
@@ -197,12 +208,158 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO save(Product product) throws Exception {
+    public ProductDTO save(ProductRequest productRequest) throws Exception {
+        Optional<MultipartFile> fileOptional = productRequest.getImage();
+        Optional<String> codeOptional = productRequest.getCode();
+        String name = productRequest.getName();
+        Optional<String> quantityOptional = productRequest.getQuantity();
+        Optional<String> unitOptional = productRequest.getUnit();
+        Optional<String> pricePerUnitOptional = productRequest.getPricePerUnit();
+        String description = productRequest.getDescription();
+        String type = productRequest.getType();
+        Product product = new Product();
+        // Upload Image
+        if (fileOptional.isPresent()) {
+            MultipartFile file = fileOptional.get();
+//            Image image = new Image(file);
+            String imageName = imageService.insertImage(file);
+            if(imageName == null){
+                throw new UnknownException();
+            }
+            product.setImage(imageName);
+        }
+
+        // Generate code
+        String code;
+        if (codeOptional== null || codeOptional.isEmpty()) {
+            code = createNewCode();
+        } else {
+            code = codeOptional.get();
+            if (isCodeExist(code)) {
+                throw new Exception("This code has already existed");
+            }
+        }
+        product.setCode(code);
+
+        // Get Current date
+        Date date = new Date();
+
+        // Get product data
+        if (isNameExist(name)) {
+            throw new Exception("This name has already existed");
+        }
+        product.setName(name);
+        if (quantityOptional.isPresent()) {
+            product.setQuantity(Integer.parseInt(quantityOptional.get()));
+        }
+        if (unitOptional.isPresent()) {
+            product.setUnit(unitOptional.get());
+        }
+        if (pricePerUnitOptional.isPresent()) {
+            product.setPricePerUnit(new BigDecimal(pricePerUnitOptional.get()));
+        }
+        product.setDescription(description);
+        product.setCreatedDate(date);
+        product.setModifiedDate(date);
+        product.setStatus((byte) 1);
+        if (!StringUtils.isNumeric(type)) {
+            throw new NotANumberException("Type is invalid");
+        }
+        product.setType((byte) (Integer.parseInt(type)));
         try {
             Product savedProduct = productRepository.save(product);
             return productConverter.convertToDTO(savedProduct);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    @Override
+    public ProductDTO update(ProductRequest productRequest,Long id) throws Exception {
+        Product product = productRepository.getOne(id);
+        Optional<MultipartFile> fileOptional = productRequest.getImage();
+        Optional<String> codeOptional = productRequest.getCode();
+        String name = productRequest.getName();
+        Optional<String> quantityOptional = productRequest.getQuantity();
+        Optional<String> unitOptional = productRequest.getUnit();
+        Optional<String> pricePerUnitOptional = productRequest.getPricePerUnit();
+        Optional<String> statusOptional = productRequest.getStatus();
+        String description = productRequest.getDescription();
+        String type = productRequest.getType();
+        // Upload new Image (OPTIONAL)
+        if (fileOptional.isPresent()) {
+            MultipartFile file = fileOptional.get();
+            String[] types = {"image/png", "image/jpg", "image/jpeg"};
+            // Upload image and update product image name
+            if (checkImage(file.getContentType())) {
+                Image image = new Image(file);
+                product.setImage(image.getImageName());
+            } else {
+                throw new InvalidImageTypeException("Invalid image");
+            }
+        }
+
+        if (codeOptional.isPresent()) {
+            String code = codeOptional.get();
+            if (isCodeExistToUpdate(code, id)) {
+                throw new Exception("This code has already existed");
+            }
+            product.setCode(code);
+        }
+
+        // Update product info
+        if (quantityOptional.isPresent()) {
+            String quantity = quantityOptional.get();
+            if (!StringUtils.isNumeric(quantity)) {
+                throw new NotANumberException("The entered quantity is not a number");
+            }
+            product.setQuantity((Integer.parseInt(quantity)));
+        }
+        if (pricePerUnitOptional.isPresent()) {
+            if (!StringUtils.isNumeric(pricePerUnitOptional.get())) {
+                throw new NotANumberException("The entered price is not a number");
+            }
+        }
+        product.setId(id);
+        if (isNameExistToUpdate(name, id)) {
+            throw new Exception("This name has already existed");
+        }
+        product.setName(name);
+        if (unitOptional.isPresent()) {
+            String unit = unitOptional.get();
+            product.setUnit(unit);
+        }
+        if (pricePerUnitOptional.isPresent()) {
+            String pricePerUnit = pricePerUnitOptional.get();
+            product.setPricePerUnit(new BigDecimal((Integer.parseInt(pricePerUnit))));
+        }
+        product.setDescription(description);
+        if (statusOptional.isPresent()) {
+            product.setStatus((byte) Integer.parseInt(statusOptional.get()));
+        }
+        if (!StringUtils.isNumeric(type)) {
+            throw new NotANumberException("Type is invalid");
+        }
+        product.setType((byte) (Integer.parseInt(type)));
+        try {
+            Product savedProduct = productRepository.save(product);
+            return productConverter.convertToDTO(savedProduct);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    private boolean checkImage(String value) {
+        String[] arr = {
+                "image/png",
+                "image/jpeg",
+                "image/jpg"
+        };
+        for (String ele : arr) {
+            if (value.equals(ele)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

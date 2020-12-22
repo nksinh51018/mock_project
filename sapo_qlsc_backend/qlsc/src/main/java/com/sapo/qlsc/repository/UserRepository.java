@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>, PagingAndSortingRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT u FROM User u WHERE u.status =1 and (u.fullName like  %:param% or " +
             "u.email like %:param% or u.phoneNumber like %:param% or " +
             "u.code like  %:param% or u.address like %:param%) ")

@@ -32,7 +32,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		
 		.authorizeRequests()
 		   .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()  
-		   .antMatchers("/image" + "/admin/**").hasRole("ADMIN")
+		   .antMatchers("/image" + "/admin/**").hasRole("3")
 		   .anyRequest().permitAll(); 
 	}
 	
