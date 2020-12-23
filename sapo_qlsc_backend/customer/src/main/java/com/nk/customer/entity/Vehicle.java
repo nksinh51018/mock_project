@@ -3,7 +3,7 @@ package com.nk.customer.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "vehicle")
+@Table(name = "vehicles")
 public class Vehicle extends BaseEntity{
 
     private String color;

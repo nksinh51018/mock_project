@@ -9,19 +9,19 @@ export const searchCustomer = (key,page,size) =>{
 
 export const createCustomer = (data) =>{
 
-    let url = `${API_ENDPOINT}/customers`;
+    let url = `${API_ENDPOINT}/customer/admin/customers`;
     return axiosService.post(url,data);
     
 }
 
 export const searchRepairman = (key,page,size) =>{
     console.log(key);
-    let url = `${API_ENDPOINT}/users/maintenanceCard?page=${page}&size=${size}&key=${key}`;
+    let url = `${API_ENDPOINT}/user/admin/users/maintenanceCard?page=${page}&size=${size}&key=${key}`;
     return axiosService.get(url);
 }
 
 export const searchProduct = (key,page,size) =>{
-    let url = `${API_ENDPOINT}/products?size=${size}&page=${page}&search=${key}`;
+    let url = `${API_ENDPOINT}/product/admin/products?size=${size}&page=${page}&search=${key}`;
     return axiosService.get(url);
 }
 
@@ -64,6 +64,6 @@ export const deleteMaintenanceCard = (data) =>{
 }
 
 export const getPlateNumberByCustomer = (data) =>{
-    let url = `${API_ENDPOINT}/maintenanceCards/Plates/${data}`;
+    let url = `${API_ENDPOINT}/customer/admin/vehicle/customer/${data}`;
     return axiosService.get(url);
 }

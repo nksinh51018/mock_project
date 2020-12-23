@@ -39,9 +39,6 @@ public class UserController {
                                                            @RequestParam(value = "param", defaultValue = "") String param) {
 
         Map<String, Object> allUser = userService.getListUser(pageNum, pageSize, sortBy, descending, param);
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-
         return new ResponseEntity(allUser, HttpStatus.OK);
     }
 
