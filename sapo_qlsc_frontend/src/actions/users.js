@@ -37,7 +37,7 @@ export const actCheckUser = (data) => {
         getUserByToken(data).then((res) => {
             console.log("connecting to chat...")
             // eslint-disable-next-line no-undef
-            let socket = new SockJS("http://localhost:8080" + '/chat');
+            let socket = new SockJS("http://localhost:8085" + '/chat');
             // eslint-disable-next-line no-undef
             let stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {

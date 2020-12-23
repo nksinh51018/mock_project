@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
 @RequestMapping("/admin/")
 public class CustomerController {
 
@@ -23,7 +22,6 @@ public class CustomerController {
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
-
     @PostMapping("/customers")
     public ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customerDTO) throws ParseException, DataTooLongException {
         CustomerDTO customer = customerService.addCustomer(customerDTO);

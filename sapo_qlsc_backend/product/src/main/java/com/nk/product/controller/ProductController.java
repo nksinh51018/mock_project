@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("admin")
-@CrossOrigin
+//@CrossOrigin
 public class ProductController {
     @Autowired
     private ProductService productService;

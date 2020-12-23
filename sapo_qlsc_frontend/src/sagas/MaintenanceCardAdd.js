@@ -94,7 +94,7 @@ export function* searchRepairmanSaga({ payload }) {
 export function* searchProductSaga({ payload }) {
 
     try {
-        const res = yield call(searchProduct, payload.key, payload.page, payload.size);
+        const res = yield call(searchProduct, payload.key, payload.page-1, payload.size);
         console.log(res);
         yield put(actSearchProductSuccess(res.data))
     }
@@ -107,7 +107,7 @@ export function* updateListProductSaga({ payload }) {
     yield delay(500)
     try {
         const page = yield select(state => state.maintenanceCardAdd.productPage)
-        const res = yield call(searchProduct, payload.data, page + 1, 5);
+        const res = yield call(searchProduct, payload.data, page , 5);
         console.log(res);
         yield put(actUpdateListProductSuccess(res.data))
     }
@@ -127,12 +127,12 @@ export function* createMaintenanceCardSaga({ payload }) {
     if (error.length === 0 && payload.check) {
         data = {
             platesNumber: payload.data.txtPlatesNumber,
-            customer: {
-                id: createMaintenanceCard1.customerItem.id
-            },
-            coordinator: {
-                id: user.id
-            },
+            customerId: createMaintenanceCard1.customerItem.id,
+            customerName: createMaintenanceCard1.customerItem.name,
+            customerPhone: createMaintenanceCard1.customerItem.phoneNumber,
+            coordinatorId: user.id,
+            coordinatorName: user.fullName,
+            coordinatorEmail: user.email,
             maintenanceCardDetails: [],
         }
         if (payload.data.txtCode !== undefined) {
@@ -144,10 +144,10 @@ export function* createMaintenanceCardSaga({ payload }) {
         if (payload.data.txtColor !== undefined) {
             data.color = payload.data.txtColor
         }
-        if (createMaintenanceCard1.repairman.user !== undefined &&createMaintenanceCard1.repairman.user !== null && createMaintenanceCard1.repairman.user.id !== undefined &&createMaintenanceCard1.repairman.user.id !== null) {
-            data.repairman = {
-                id: createMaintenanceCard1.repairman.user.id
-            }
+        if (createMaintenanceCard1.repairman !== undefined &&createMaintenanceCard1.repairman !== null && createMaintenanceCard1.repairman.id !== undefined &&createMaintenanceCard1.repairman.id !== null) {
+            data.repairmanId = createMaintenanceCard1.repairman.id;
+            data.repairmanName = createMaintenanceCard1.repairman.fullName;
+            data.repairmanEmail = createMaintenanceCard1.repairman.email
         }
         if (payload.data.txtDescription !== undefined) {
             data.description = payload.data.txtDescription
@@ -156,46 +156,49 @@ export function* createMaintenanceCardSaga({ payload }) {
             data.returnDate = payload.data.txtReturnDate
         }
         for (let i = 0; i < createMaintenanceCard1.products.length; i++) {
-            let product = {
-                product: {
-                    id: createMaintenanceCard1.products[i].id
-                },
+            let maintenanceCardDetail = {
+                productId: createMaintenanceCard1.products[i].id
             }
             if (createMaintenanceCard1.products[i].warranty === 1) {
-                product.price = 0;
+                maintenanceCardDetail.price = 0;
             }
             else {
-                product.price = createMaintenanceCard1.products[i].pricePerUnit;
+                maintenanceCardDetail.price = createMaintenanceCard1.products[i].pricePerUnit;
             }
-            product.quantity = createMaintenanceCard1.products[i].amount;
-            data.maintenanceCardDetails.push(product);
+            maintenanceCardDetail.productName =  createMaintenanceCard1.products[i].name
+            maintenanceCardDetail.productCode =  createMaintenanceCard1.products[i].code
+            maintenanceCardDetail.productImage =  createMaintenanceCard1.products[i].image
+            maintenanceCardDetail.productUnit =  createMaintenanceCard1.products[i].unit
+            maintenanceCardDetail.productType =  createMaintenanceCard1.products[i].type
+            maintenanceCardDetail.quantity = createMaintenanceCard1.products[i].amount;
+            data.maintenanceCardDetails.push(maintenanceCardDetail);
         }
 
         console.log(data);
-        try {
-            const res = yield call(createMaintenanceCard, data);
-            if (res.status === STATUS_CODE.SUCCESS) {
-                yield put(actCreateMaintenanceCardSuccess(res.data))
-            }
-            if (res.status === 409) {
-                yield put(actCreateMaintenanceCardFailed("Sản phẩm không có đủ trong kho"))
-            }
-            if (res.status === 400) {
-                yield put(actCreateMaintenanceCardFailed("Mã phiếu sửa chữa bị trùng"))
-            }
-        }
-        catch (e) {
-            console.log(e.response);
-            if (e.response.status === 409) {
-                yield put(actCreateMaintenanceCardFailed("Sản phẩm không có đủ trong kho"))
-            }
-            else if (e.response.status === 400) {
-                yield put(actCreateMaintenanceCardFailed("Mã phiếu sửa chữa bị trùng"))
-            }
-            else {
-                yield put(actCreateMaintenanceCardFailed("Tạo phiếu thất bại"))
-            }
-        }
+        // try {
+        //     const res = yield call(createMaintenanceCard, data);
+        //     if (res.status === STATUS_CODE.SUCCESS) {
+        //         yield put(actCreateMaintenanceCardSuccess(res.data))
+        //     }
+        //     if (res.status === 409) {
+        //         yield put(actCreateMaintenanceCardFailed("Sản phẩm không có đủ trong kho"))
+        //     }
+        //     if (res.status === 400) {
+        //         yield put(actCreateMaintenanceCardFailed("Mã phiếu sửa chữa bị trùng"))
+        //     }
+        // }
+        // catch (e) {
+        //     console.log(e.response);
+        //     if (e.response.status === 409) {
+        //         yield put(actCreateMaintenanceCardFailed("Sản phẩm không có đủ trong kho"))
+        //     }
+        //     else if (e.response.status === 400) {
+        //         yield put(actCreateMaintenanceCardFailed("Mã phiếu sửa chữa bị trùng"))
+        //     }
+        //     else {
+        //         yield put(actCreateMaintenanceCardFailed("Tạo phiếu thất bại"))
+        //     }
+        // }
 
     }
     else {

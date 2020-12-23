@@ -126,11 +126,11 @@ const MaintenanceCardInfo = (props) => {
     useEffect(() => {
         console.log(1);
         setEdit(props.maintenanceCardAdd.repairman.edit)
-        if (props.maintenanceCardAdd.repairman.user === null || props.maintenanceCardAdd.repairman.user === undefined) {
+        if (props.maintenanceCardAdd.repairman === null || props.maintenanceCardAdd.repairman === undefined) {
             setRepairmanSearch("")
         }
         else {
-            setRepairmanSearch(props.maintenanceCardAdd.repairman.user.fullName)
+            setRepairmanSearch(props.maintenanceCardAdd.repairman.fullName)
         }
         // setRepairmanSearch(props.maintenanceCardAdd.repairman.user.fullName)
 
@@ -175,11 +175,11 @@ const MaintenanceCardInfo = (props) => {
     // }, [props.maintenanceCardAdd.repairman]);
     const renderRepairmanItem = (repairman) => {
         return {
-            value: repairman.user.id.toString(),
+            value: repairman.id.toString(),
             label: (
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>{repairman.user.fullName}</span>
-                    <span>{repairman.numberMaintenanceCards}</span>
+                    <span>{repairman.fullName}</span>
+                    <span>{repairman.totalMaintenanceCard}</span>
                 </div>
             ),
         };
@@ -206,9 +206,9 @@ const MaintenanceCardInfo = (props) => {
         result = plateNumbers.map((item, index) => {
             return (
                 {
-                    value: item.toString(),
+                    value: item.plateNumber,
                     label: (
-                        <span>{item}</span>
+                        <span>{item.plateNumber}</span>
                     ),
                 }
             )
@@ -370,7 +370,13 @@ const MaintenanceCardInfo = (props) => {
     const handleSelectPlates = (e) => {
         let a = { ...info };
         a["platesNumber"] = e;
-        console.log(a);
+        for(let i=0;i< plateNumbers.length;i++){
+            const item = plateNumbers[i];
+            if(item.plateNumber === e){
+                a["model"] = item.model;
+                a["color"] = item.color;
+            }
+        }
         setInfo(a)
     }
 

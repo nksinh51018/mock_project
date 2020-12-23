@@ -498,7 +498,8 @@ const findMaintenanceCardDetail = (id, list) => {
 const findRepairman = (id, list) => {
     let index = -1;
     for (let i = 0; i < list.length; i++) {
-        if (list[i].user.id.toString() === id) {
+        console.log(list[i]);
+        if (list[i].id.toString() === id) {
 
             index = i;
             break;

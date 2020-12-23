@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public HashMap<String, Object> getTotalMaintenanceCardByRepairman(int page, int size, String key) {
         Pageable paging = PageRequest.of(page - 1, size, Sort.by("totalMaintenanceCard").descending());
-        Page<User> map = userRepository.getAllUser(paging,key);
+        Page<User> map = userRepository.getAllRepairman(paging,key);
         List<User> users = map.getContent();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
