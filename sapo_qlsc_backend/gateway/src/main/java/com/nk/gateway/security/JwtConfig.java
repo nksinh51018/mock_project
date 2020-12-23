@@ -1,4 +1,4 @@
-package com.nk.zuulServer.security;
+package com.nk.gateway.security;
 
 import org.springframework.beans.factory.annotation.Value;
 

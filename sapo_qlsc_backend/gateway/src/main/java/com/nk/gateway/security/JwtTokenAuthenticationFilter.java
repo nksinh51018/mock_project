@@ -1,4 +1,4 @@
-package com.nk.zuulServer.security;
+package com.nk.gateway.security;
 
 import java.io.IOException;
 import java.util.Date;
@@ -41,9 +41,8 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
 		
 		String token = header.replace(jwtConfig.getPrefix(), "");
 		
-		try {	
-			
-		
+		try {
+
 			Claims claims = Jwts.parser()
 					.setSigningKey(jwtConfig.getSecret().getBytes())
 					.parseClaimsJws(token)

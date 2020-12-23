@@ -2,7 +2,7 @@ import {API_ENDPOINT} from '../constants/api'
 import axiosService from '../utils/axiosService'
 
 export const searchCustomer = (key,page,size) =>{
-    let url = `${API_ENDPOINT}/customers?search=${key}&size=${size}&page=${page}`;
+    let url = `${API_ENDPOINT}/customer/admin/customers?search=${key}&size=${size}&page=${page}`;
     console.log(url);
     return axiosService.get(url);
 }

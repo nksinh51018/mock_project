@@ -1,4 +1,4 @@
-package com.nk.zuulServer;
+package com.nk.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,10 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableZuulProxy      
 @EnableWebSecurity
 @EnableDiscoveryClient
-public class ZuulServerApplication {
+public class GatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ZuulServerApplication.class, args);
+		SpringApplication.run(GatewayApplication.class, args);
 		
 	}
 }

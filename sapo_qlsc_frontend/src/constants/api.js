@@ -1,4 +1,4 @@
-export const API_ENDPOINT = 'http://localhost:8090/admin'
+export const API_ENDPOINT = 'http://localhost:8762'
 
 export const STATUS_CODE = {
     SUCCESS: 200,
