@@ -3,6 +3,7 @@ package com.nk.product.kafka;
 public class ProductModel {
     private int amountChargeInUnit;
     private String code;
+    private int status;
 
     public int getAmountChargeInUnit() {
         return amountChargeInUnit;
@@ -18,5 +19,13 @@ public class ProductModel {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

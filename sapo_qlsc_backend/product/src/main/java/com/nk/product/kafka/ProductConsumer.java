@@ -37,7 +37,16 @@ public class ProductConsumer {
                 ProductHistory productHistory = new ProductHistory();
                 productHistory.setAmountChargeInUnit(productModel.getAmountChargeInUnit());
                 productHistory.setName(product.getName());
-                productHistory.setNote("Hoàn thành đơn "+ productModel.getCode().toUpperCase());
+                if(productModel.getStatus() == 0){
+                    productHistory.setNote("Tạo đơn "+ productModel.getCode().toUpperCase());
+                }
+                else if(productModel.getStatus() == 1){
+                    productHistory.setNote("Thêm vào đơn "+ productModel.getCode().toUpperCase());
+                }
+                else if(productModel.getStatus() == 2){
+                    productHistory.setNote("Xóa khỏi đơn"+ productModel.getCode().toUpperCase());
+                }
+//                productHistory.setNote("Hoàn thành đơn "+ productModel.getCode().toUpperCase());
                 productHistory.setProductId(product.getId());
                 productHistory.setStockRemain(product.getQuantity());
                 productHistory.setCreatedDate(now);
