@@ -37,7 +37,7 @@ const Service = (props) => {
             key: 'amount',
             width: '10%',
             render: (amount, data) => {
-                if (data.type === 1 && user.role !== 2 && props.maintenanceCardAdd.info.returnDate === null) {
+                if (data.type === 1 && user.role !== 2 && user.role !== 0 && props.maintenanceCardAdd.info.returnDate === null) {
                     return (<Input value={amount} onChange={(e) => changeAmount(data.id, e.target.value)} />)
                 }
                 else {
@@ -52,12 +52,12 @@ const Service = (props) => {
             render: (warranty, data) => {
                 if (warranty === 1) {
                     return (
-                        user.role !== 2 && props.maintenanceCardAdd.info.returnDate === null ? <Button onClick={() => warrantyItem(data.id)} type="primary">Bảo hành</Button> : <span>Bảo hành</span>
+                        user.role !== 2&& user.role !== 0  && props.maintenanceCardAdd.info.returnDate === null ? <Button onClick={() => warrantyItem(data.id)} type="primary">Bảo hành</Button> : <span>Bảo hành</span>
                     )
                 }
                 else {
                     return (
-                        user.role !== 2 && props.maintenanceCardAdd.info.returnDate === null? <Button onClick={() => warrantyItem(data.id)} >Không bảo hành</Button> : <span>Không bảo hành</span>
+                        user.role !== 2 && user.role !== 0 && props.maintenanceCardAdd.info.returnDate === null? <Button onClick={() => warrantyItem(data.id)} >Không bảo hành</Button> : <span>Không bảo hành</span>
                     )
                 }
             }
@@ -115,7 +115,7 @@ const Service = (props) => {
             dataIndex: 'key',
             key: 'close',
             render: (key, data) => {
-                if (user.role !== 2 &&  props.maintenanceCardAdd.info.returnDate === null) {
+                if (user.role !== 2 && user.role !== 0  &&  props.maintenanceCardAdd.info.returnDate === null) {
                     if (data.status === 0) {
                         return (
                             <CloseOutlined onClick={() => { deleteItem(data.id) }} />
@@ -272,7 +272,7 @@ const Service = (props) => {
     return (
         <>
             <Row>
-                {user.role !== 2 && props.maintenanceCardAdd.info.returnDate === null ? <AutoComplete
+                {user.role !== 2 && user.role !== 0 && props.maintenanceCardAdd.info.returnDate === null ? <AutoComplete
                     dropdownClassName="certain-category-search-dropdown"
                     style={{ width: '100%' }}
                     options={renderOptions()}

@@ -20,12 +20,18 @@ public class MaintenanceCardConverter {
         MaintenanceCardDTO maintenanceCardDTO = new MaintenanceCardDTO();
         maintenanceCardDTO.setCode(maintenanceCard.getCode());
         maintenanceCardDTO.setPlatesNumber(maintenanceCard.getPlatesNumber());
-        maintenanceCardDTO.setCustomerId(maintenanceCard.getCustomerId());
-        maintenanceCardDTO.setCustomerName(maintenanceCard.getCustomerName());
-        maintenanceCardDTO.setCustomerPhone(maintenanceCard.getCustomerPhone());
-        maintenanceCardDTO.setRepairmanId(maintenanceCard.getRepairmanId());
-        maintenanceCardDTO.setRepairmanName(maintenanceCard.getRepairmanName());
-        maintenanceCardDTO.setRepairmanEmail(maintenanceCard.getRepairmanEmail());
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setId(maintenanceCard.getCustomerId());
+        customerDTO.setName(maintenanceCard.getCustomerName());
+        customerDTO.setPhoneNumber(maintenanceCard.getCustomerPhone());
+        maintenanceCardDTO.setCustomer(customerDTO);
+        UserDTO repairman = new UserDTO();
+        if(maintenanceCard.getRepairmanId()!=0){
+            repairman.setId(maintenanceCard.getRepairmanId());
+            repairman.setFullName(maintenanceCard.getRepairmanName());
+            repairman.setEmail(maintenanceCard.getRepairmanEmail());
+            maintenanceCardDTO.setRepairman(repairman);
+        }
         maintenanceCardDTO.setDescription(maintenanceCard.getDescription());
         maintenanceCardDTO.setReturnDate(maintenanceCard.getReturnDate());//
         maintenanceCardDTO.setPrice(maintenanceCard.getPrice());
@@ -34,17 +40,64 @@ public class MaintenanceCardConverter {
         maintenanceCardDTO.setPayStatus(maintenanceCard.getPayStatus());
         maintenanceCardDTO.setModel(maintenanceCard.getModel());
         maintenanceCardDTO.setColor(maintenanceCard.getColor());
-        maintenanceCardDTO.setCoordinatorId(maintenanceCard.getCoordinatorId());
-        maintenanceCardDTO.setCoordinatorName(maintenanceCard.getCoordinatorName());
-        maintenanceCardDTO.setCoordinatorEmail(maintenanceCard.getCoordinatorEmail());
+        UserDTO coordinator = new UserDTO();
+        coordinator.setId(maintenanceCard.getCoordinatorId());
+        coordinator.setFullName(maintenanceCard.getCoordinatorName());
+        coordinator.setEmail(maintenanceCard.getCoordinatorEmail());
+        maintenanceCardDTO.setCoordinator(coordinator);
         maintenanceCardDTO.setId(maintenanceCard.getId());
         maintenanceCardDTO.setCreatedDate(maintenanceCard.getCreatedDate());
+        maintenanceCardDTO.setExpectedReturnDate(maintenanceCard.getExpectedReturnDate());
         return maintenanceCardDTO;
     }
     public MaintenanceCard convertToEntity(MaintenanceCardDTO maintenanceCardDTO) {
-        ModelMapper modelMapper = new ModelMapper();
-        MaintenanceCard maintenance= modelMapper.map(maintenanceCardDTO,MaintenanceCard.class);
-        return maintenance;
+        MaintenanceCard maintenanceCard = new MaintenanceCard();
+        UserDTO repairman = maintenanceCardDTO.getRepairman();
+        if(repairman!= null && repairman.getId() != null){
+            maintenanceCard.setRepairmanName(repairman.getFullName());
+            maintenanceCard.setRepairmanId(repairman.getId());
+            maintenanceCard.setRepairmanEmail(repairman.getEmail());
+        }
+        CustomerDTO customerDTO = maintenanceCardDTO.getCustomer();
+        maintenanceCard.setCustomerPhone(customerDTO.getPhoneNumber());
+        maintenanceCard.setCustomerName(customerDTO.getName());
+        maintenanceCard.setCustomerId(customerDTO.getId());
+        UserDTO coordinator = maintenanceCardDTO.getCoordinator();
+        maintenanceCard.setCoordinatorName(coordinator.getFullName());
+        maintenanceCard.setCoordinatorId(coordinator.getId());
+        maintenanceCard.setCoordinatorEmail(coordinator.getEmail());
+        maintenanceCard.setWorkStatus(maintenanceCardDTO.getWorkStatus());
+        maintenanceCard.setCode(maintenanceCardDTO.getCode());
+        maintenanceCard.setPayStatus(maintenanceCardDTO.getPayStatus());
+        maintenanceCard.setPlatesNumber(maintenanceCardDTO.getPlatesNumber());
+        maintenanceCard.setPrice(maintenanceCardDTO.getPrice());
+        maintenanceCard.setReturnDate(maintenanceCardDTO.getReturnDate());
+        maintenanceCard.setColor(maintenanceCardDTO.getColor());
+        maintenanceCard.setDescription(maintenanceCardDTO.getDescription());
+        maintenanceCard.setExpectedReturnDate(maintenanceCardDTO.getExpectedReturnDate());
+        List<MaintenanceCardDetail> maintenanceCardDetails = new ArrayList<>();
+        System.out.println( maintenanceCardDTO.getMaintenanceCardDetails().size());
+        for(MaintenanceCardDetailDTO maintenanceCardDetailDTO : maintenanceCardDTO.getMaintenanceCardDetails()){
+            MaintenanceCardDetail maintenanceCardDetail = new MaintenanceCardDetail();
+            ProductDTO productDTO = maintenanceCardDetailDTO.getProduct();
+            maintenanceCardDetail.setProductCode(productDTO.getCode());
+            maintenanceCardDetail.setMaintenanceCard(maintenanceCard);
+            maintenanceCardDetail.setStatus(maintenanceCardDetailDTO.getStatus());
+            maintenanceCardDetail.setPrice(maintenanceCardDetailDTO.getPrice());
+            maintenanceCardDetail.setProductId(productDTO.getId());
+            maintenanceCardDetail.setProductImage(productDTO.getImage());
+            maintenanceCardDetail.setProductName(productDTO.getName());
+            maintenanceCardDetail.setProductType(productDTO.getType());
+            maintenanceCardDetail.setProductUnit(productDTO.getUnit());
+            maintenanceCardDetail.setQuantity(maintenanceCardDetailDTO.getQuantity());
+            maintenanceCardDetail.setId(maintenanceCardDetailDTO.getId());
+            maintenanceCardDetail.setProductPricePerUnit(productDTO.getPricePerUnit());
+            maintenanceCardDetails.add(maintenanceCardDetail);
+        }
+        maintenanceCard.setMaintenanceCardDetails(maintenanceCardDetails);
+        maintenanceCard.setModel(maintenanceCardDTO.getModel());
+        maintenanceCard.setId(maintenanceCardDTO.getId());
+        return maintenanceCard;
     }
     public List<MaintenanceCardDTO> convertToMaintenanceCardDTOList(List<MaintenanceCard> maintenanceCardList){
         List<MaintenanceCardDTO> list = new ArrayList<>();
@@ -88,12 +141,15 @@ public class MaintenanceCardConverter {
             if(maintenanceCardDetail.getIsDelete() == 0) {
                 MaintenanceCardDetailDTO maintenanceCardDetailDTO = new MaintenanceCardDetailDTO();
                 maintenanceCardDetailDTO.setPrice(maintenanceCardDetail.getPrice());
-                maintenanceCardDetailDTO.setProductType(maintenanceCardDetail.getProductType());
-                maintenanceCardDetailDTO.setProductCode(maintenanceCardDetail.getProductCode());
-                maintenanceCardDetailDTO.setProductId(maintenanceCardDetail.getProductId());
-                maintenanceCardDetailDTO.setProductImage(maintenanceCardDetail.getProductImage());
-                maintenanceCardDetailDTO.setProductName(maintenanceCardDetail.getProductName());
-                maintenanceCardDetailDTO.setProductUnit(maintenanceCardDetail.getProductUnit());
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setType(maintenanceCardDetail.getProductType());
+                productDTO.setCode(maintenanceCardDetail.getProductCode());
+                productDTO.setId(maintenanceCardDetail.getProductId());
+                productDTO.setImage(maintenanceCardDetail.getProductImage());
+                productDTO.setName(maintenanceCardDetail.getProductName());
+                productDTO.setUnit(maintenanceCardDetail.getProductUnit());
+                productDTO.setPricePerUnit(maintenanceCardDetail.getProductPricePerUnit());
+                maintenanceCardDetailDTO.setProduct(productDTO);
                 maintenanceCardDetailDTO.setQuantity(maintenanceCardDetail.getQuantity());
                 maintenanceCardDetailDTO.setStatus(maintenanceCardDetail.getStatus());
                 maintenanceCardDetailDTO.setCreatedDate(maintenanceCardDetail.getCreatedDate());

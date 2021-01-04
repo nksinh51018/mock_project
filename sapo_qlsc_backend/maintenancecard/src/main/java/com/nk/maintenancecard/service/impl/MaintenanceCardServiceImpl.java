@@ -239,6 +239,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
                 maintenanceCardDetail.setCreatedDate(maintenanceCardDetail1Update.getCreatedDate());
                 maintenanceCardDetail.setMaintenanceCard(maintenanceCard);
                 maintenanceCardDetail.setStatus(maintenanceCardDetail1Update.getStatus());
+                maintenanceCardDetail.setModifiedDate(now);
                 // so luong con lai = so luong trong kho - chenh lech giua phieu sua chua truoc va sau
                 if (maintenanceCardDetail.getProductId() != 0 && maintenanceCardDetail.getProductType() == 1) {
                     if(maintenanceCardDetail.getQuantity() - maintenanceCardDetail1Update.getQuantity() !=0) {
@@ -329,6 +330,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
         maintenanceCard.setCustomerName(maintenanceCardUpdate.getCustomerName());
         maintenanceCard.setCustomerPhone(maintenanceCardUpdate.getCustomerPhone());
         maintenanceCard.setPaymentHistories(maintenanceCardUpdate.getPaymentHistories());
+        maintenanceCard.setModifiedDate(now);
         if (maintenanceCard.getWorkStatus() != 2 || maintenanceCard.getPayStatus() != 1) {
             maintenanceCard.setReturnDate(null);
         } else {
@@ -346,8 +348,22 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             maintenanceCard.setRepairmanEmail(maintenanceCardUpdate.getRepairmanEmail());
             maintenanceCard.setRepairmanId(maintenanceCardUpdate.getRepairmanId());
             maintenanceCard.setRepairmanName(maintenanceCardUpdate.getRepairmanName());
-            ProducerRecord<String, String> record2 = new ProducerRecord<String, String>("qlsc_user", maintenanceCard.getRepairmanId()+"","1" );
-            kafkaTemplate.send(record2);
+        }
+        else{
+            if(maintenanceCard.getRepairmanId() != 0){
+                maintenanceCard.setRepairmanName(maintenanceCardDTO.getRepairman().getFullName());
+                ProducerRecord<String, String> record2 = new ProducerRecord<String, String>("qlsc_user", maintenanceCard.getRepairmanId()+"","1" );
+                kafkaTemplate.send(record2);
+                MessageModel messageModel = new MessageModel();
+                messageModel.setMaintenanceCardCode(maintenanceCard.getCode());
+                messageModel.setAuthor(email);
+                messageModel.setCoordinatorEmail(maintenanceCard.getCoordinatorEmail());
+                messageModel.setRepairmanEmail(maintenanceCard.getRepairmanEmail());
+                messageModel.setType(1);
+                String jsonString = mapper.writeValueAsString(messageModel);
+                ProducerRecord<String, String> record = new ProducerRecord<String, String>("qlsc_message", maintenanceCard.getId()+"", jsonString);
+                kafkaTemplate.send(record);
+            }
         }
 
         try {
@@ -370,7 +386,7 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
             vehicleModel.setModel(maintenanceCard.getModel());
             vehicleModel.setPlateNumber(maintenanceCard.getPlatesNumber());
             String jsonString2 = mapper.writeValueAsString(vehicleModel);
-            ProducerRecord<String, String> record2 = new ProducerRecord<String, String>("qlsc_vehicle", maintenanceCard1.getCustomerId()+"", jsonString);
+            ProducerRecord<String, String> record2 = new ProducerRecord<String, String>("qlsc_vehicle", maintenanceCard1.getCustomerId()+"", jsonString2);
             kafkaTemplate.send(record2);
             return maintenanceCardConverter.convertAllToDTO(maintenanceCard1);
 
@@ -488,6 +504,14 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
 
     }
 
+    @Override
+    public MaintenanceCardDTO setReturnDate(long id) {
+        MaintenanceCard maintenanceCard = maintenanceCardRepository.findById(id).orElse(null);
+        Date now = new Date();
+        maintenanceCard.setReturnDate(now);
+        return maintenanceCardConverter.convertAllToDTO(maintenanceCard);
+    }
+
     public String createNewCode() throws NotANumberException {
         Long codeNumber = 0L;
         String newCodeString;
@@ -550,6 +574,8 @@ public class MaintenanceCardServiceImpl implements MaintenanceCardService {
         map.put("totalPages", maintenanceCardPage.getTotalPages());
         return map;
     }
+
+
 
 
 }

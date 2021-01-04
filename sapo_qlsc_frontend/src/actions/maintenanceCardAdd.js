@@ -451,3 +451,46 @@ export const actGetPlateNumberByCustemerSuccess = (data) =>{
         }
     }
 }
+
+
+export const actGetHmac = (data) =>{
+    return {
+        type: MaintenanceCardAddType.GET_HMAC,
+        payload:{
+            data,
+        }
+    }
+}
+
+export const actGetHmacSuccess = (data) =>{
+    return {
+        type: MaintenanceCardAddType.GET_HMAC_SUCCESS,
+        payload:{
+            data,
+        }
+    }
+}
+
+export const actGetMaintenanceCardByHmac = (id,hmac) =>{
+    return {
+        type: MaintenanceCardAddType.GET_MAINTENANCE_CARD_BY_HMAC,
+        payload:{
+            id,hmac,
+        }
+    }
+}
+
+export const actGetMaintenanceCardByHmacSuccess = (data) =>{
+    return {
+        type: MaintenanceCardAddType.GET_MAINTENANCE_CARD_BY_HMAC_SUCCESS,
+        payload:{
+            data,
+        }
+    }
+}
+
+export const actSetReturnDate = () =>{
+    return {
+        type: MaintenanceCardAddType.SET_RETURN_DATE,
+    }
+}

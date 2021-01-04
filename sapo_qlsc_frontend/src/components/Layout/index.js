@@ -22,9 +22,30 @@ import { NavLink } from "react-router-dom";
 import "./index.css";
 import history from "../../history";
 import { connect } from "react-redux";
-import Message from "../Message";
+import MessageItem from "../../components/MessageItem";
+import { bindActionCreators } from "redux";
+import * as messagesAction from '../../actions/message';
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
+
+  const data = [
+    {
+      id: 1,
+      title: "test 1",
+      content: "content 1 dsadd dddddddddddddddddddddddddddddddda",
+      url: "/admin/maintenanceCards/73",
+      status: 1,
+      createdDate: "2020/08/08 12:09",
+    },
+    {
+      id: 2,
+      title: "test 1",
+      content: "content 1",
+      url: "/admin/maintenanceCards/73",
+      status: 0,
+      createdDate: "2020/08/08 12:09",
+    },
+  ];
 
 const Layout1 = (props) => {
   const [state, setState] = useState({
@@ -32,6 +53,13 @@ const Layout1 = (props) => {
   });
   const [user, setuser] = useState({
     role: 3,
+  });
+
+  const [message,setMessage] = useState({
+    messages: [],
+    currentPage: 0,
+    totalItems: 0,
+    totalPages: 0,
   });
 
   useEffect(() => {
@@ -46,8 +74,24 @@ const Layout1 = (props) => {
     });
   };
 
-  const handleClickMessage = ()=>{
+  useEffect(() => {
+    setMessage(props.message);
+  }, [props.message]);
 
+  const handleClickMessage = ()=>{
+    console.log("click");
+    const {messageActionsCreator} = props;
+    const {actGetMessages} = messageActionsCreator;
+    actGetMessages(1,100)
+  }
+
+  const renderMessage = ()=>{
+    let result = [];
+    result = message.messages.map((item, index) => {
+      return <MessageItem item={item} key={item.id} />;
+    });
+    
+    return <div style={{height: 500,overflow: "scroll"}}>{result}</div>;
   }
 
   return (
@@ -141,6 +185,9 @@ const Layout1 = (props) => {
                 <Menu.Item key="8" icon={<UnorderedListOutlined />}>
                   <NavLink to="/admin/products">Danh sách sản phẩm</NavLink>
                 </Menu.Item>
+                <Menu.Item key="20" icon={<UnorderedListOutlined />}>
+                  <NavLink to="/admin/products/history">Lịch sử</NavLink>
+                </Menu.Item>
               </SubMenu>
               <SubMenu key="sub5" icon={<IdcardOutlined />} title="Nhân viên">
                 <Menu.Item key="9" icon={<PlusCircleOutlined />}>
@@ -180,7 +227,9 @@ const Layout1 = (props) => {
             }
           >
             <Menu.Item key="12">
-              <Popover placement="rightBottom"  content={Message} title="Thông báo" trigger="click" onClick={handleClickMessage}>
+              <Popover placement="rightBottom"   content={
+                <div>{renderMessage()}
+                  </div>} title="Thông báo" trigger="click" onClick={handleClickMessage}>
                 <Badge count={user.messageNumber} overflowCount={10}>
                   <div style={{ margin: "0 10px" }}>Thông báo</div>
                 </Badge>
@@ -240,7 +289,15 @@ const Layout1 = (props) => {
 const mapStateToProps = (state) => {
   return {
     user: state.userReducer,
+    message: state.messageReducer
   };
 };
 
-export default connect(mapStateToProps, null)(Layout1);
+const mapDispatchToProps = (dispatch) => {
+  return {
+      messageActionsCreator: bindActionCreators(messagesAction, dispatch),
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout1);

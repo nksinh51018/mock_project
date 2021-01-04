@@ -26,44 +26,54 @@ export const searchProduct = (key,page,size) =>{
 }
 
 export const createMaintenanceCard = (data) =>{
-    let url = `${API_ENDPOINT}/maintenanceCards`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/maintenanceCards`;
     return axiosService.post(url,data);
 }
 
 export const fetchMaintenanceCardById = (id) =>{
-    let url = `${API_ENDPOINT}/maintenanceCards/${id}`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/maintenanceCards/${id}`;
     return axiosService.get(url);
 }
 
 export const updateMaintenanceCard = (data) =>{
     console.log(data);
-    let url = `${API_ENDPOINT}/maintenanceCards/${data.id}`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/maintenanceCards/${data.id}`;
     return axiosService.put(url,data);
 }
 
 export const completeCard = (ids) =>{
-    let url = `${API_ENDPOINT}/maintenanceCards/workStatus`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/maintenanceCards/workStatus`;
     console.log(ids);
     return axiosService.put(url,ids);
 }
 
 export const updateStatusDetail = (id) =>{
-    let url = `${API_ENDPOINT}/maintenanceCardDetails/status/${id}`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/maintenanceCardDetails/status/${id}`;
     return axiosService.put(url);
 }
 
 
 export const createPaymentHistory = (data) =>{
-    let url = `${API_ENDPOINT}/paymentHistories`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/paymentHistories`;
     return axiosService.post(url,data);
 }
 
 export const deleteMaintenanceCard = (data) =>{
-    let url = `${API_ENDPOINT}/maintenanceCards/${data}`;
+    let url = `${API_ENDPOINT}/maintenancecard/admin/maintenanceCards/${data}`;
     return axiosService.delete(url);
 }
 
 export const getPlateNumberByCustomer = (data) =>{
     let url = `${API_ENDPOINT}/customer/admin/vehicle/customer/${data}`;
+    return axiosService.get(url);
+}
+
+export const getHmac = (data) =>{
+    let url = `${API_ENDPOINT}/user/admin/hmac/${data}`;
+    return axiosService.get(url);
+}
+
+export const actGetMaintenanceCardByHmac = (id,hmac) =>{
+    let url = `${API_ENDPOINT}/maintenancecard/user/maintenanceCards?id=${id}&hmac=${hmac}`;
     return axiosService.get(url);
 }

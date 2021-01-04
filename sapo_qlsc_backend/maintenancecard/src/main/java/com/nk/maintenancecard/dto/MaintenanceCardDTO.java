@@ -9,28 +9,15 @@ import java.util.Date;
 import java.util.List;
 
 public class MaintenanceCardDTO extends BaseDTO {
-
     private String code;
 
     private String platesNumber;
 
-    private long customerId;
+    private CustomerDTO customer;
 
-    private String customerName;
+    private UserDTO repairman;
 
-    private String customerPhone;
-
-    private long repairmanId;
-
-    private String repairmanName;
-
-    private String repairmanEmail;
-
-    private long coordinatorId;
-
-    private String coordinatorName;
-
-    private String coordinatorEmail;
+    private UserDTO coordinator;
 
     private String description;
 
@@ -46,26 +33,20 @@ public class MaintenanceCardDTO extends BaseDTO {
 
     private String color;
 
+    private Date expectedReturnDate;
+
     private List<MaintenanceCardDetailDTO> maintenanceCardDetails;
 
     private List<PaymentHistoryDTO> paymentHistories;
 
     private List<MaintenanceCardDetailStatusHistoryDTO> maintenanceCardDetailStatusHistories;
 
-    public String getRepairmanEmail() {
-        return repairmanEmail;
+    public Date getExpectedReturnDate() {
+        return expectedReturnDate;
     }
 
-    public void setRepairmanEmail(String repairmanEmail) {
-        this.repairmanEmail = repairmanEmail;
-    }
-
-    public String getCoordinatorEmail() {
-        return coordinatorEmail;
-    }
-
-    public void setCoordinatorEmail(String coordinatorEmail) {
-        this.coordinatorEmail = coordinatorEmail;
+    public void setExpectedReturnDate(Date expectedReturnDate) {
+        this.expectedReturnDate = expectedReturnDate;
     }
 
     public List<MaintenanceCardDetailStatusHistoryDTO> getMaintenanceCardDetailStatusHistories() {
@@ -92,60 +73,28 @@ public class MaintenanceCardDTO extends BaseDTO {
         this.platesNumber = platesNumber;
     }
 
-    public long getCustomerId() {
-        return customerId;
+    public CustomerDTO getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
+    public void setCustomer(CustomerDTO customer) {
+        this.customer = customer;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public UserDTO getRepairman() {
+        return repairman;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setRepairman(UserDTO repairman) {
+        this.repairman = repairman;
     }
 
-    public String getCustomerPhone() {
-        return customerPhone;
+    public UserDTO getCoordinator() {
+        return coordinator;
     }
 
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
-    }
-
-    public long getRepairmanId() {
-        return repairmanId;
-    }
-
-    public void setRepairmanId(long repairmanId) {
-        this.repairmanId = repairmanId;
-    }
-
-    public String getRepairmanName() {
-        return repairmanName;
-    }
-
-    public void setRepairmanName(String repairmanName) {
-        this.repairmanName = repairmanName;
-    }
-
-    public long getCoordinatorId() {
-        return coordinatorId;
-    }
-
-    public void setCoordinatorId(long coordinatorId) {
-        this.coordinatorId = coordinatorId;
-    }
-
-    public String getCoordinatorName() {
-        return coordinatorName;
-    }
-
-    public void setCoordinatorName(String coordinatorName) {
-        this.coordinatorName = coordinatorName;
+    public void setCoordinator(UserDTO coordinator) {
+        this.coordinator = coordinator;
     }
 
     public String getDescription() {
@@ -218,5 +167,8 @@ public class MaintenanceCardDTO extends BaseDTO {
 
     public void setPaymentHistories(List<PaymentHistoryDTO> paymentHistories) {
         this.paymentHistories = paymentHistories;
+    }
+
+    public MaintenanceCardDTO() {
     }
 }

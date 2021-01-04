@@ -64,11 +64,23 @@ public class MaintenanceCard extends BaseEntity {
     @Column(name = "color", length = 50)
     private String color;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "expected_return_date", length = 19)
+    private Date expectedReturnDate;
+
     @OneToMany(mappedBy = "maintenanceCard", cascade = CascadeType.ALL)
     private List<MaintenanceCardDetail> maintenanceCardDetails;
 
     @OneToMany(mappedBy = "maintenanceCard", cascade = CascadeType.ALL)
     private List<PaymentHistory> paymentHistories;
+
+    public Date getExpectedReturnDate() {
+        return expectedReturnDate;
+    }
+
+    public void setExpectedReturnDate(Date expectedReturnDate) {
+        this.expectedReturnDate = expectedReturnDate;
+    }
 
     public String getRepairmanEmail() {
         return repairmanEmail;

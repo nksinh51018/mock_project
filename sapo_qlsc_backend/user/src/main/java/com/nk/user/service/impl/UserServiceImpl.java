@@ -45,12 +45,12 @@ public class UserServiceImpl implements UserService {
         if (descending.isEmpty()) {
             descending = "desc";
         }
-        Pageable paging = PageRequest.of(page - 1, size, Sort.by("totalMaintenanceCard").descending());
+        Pageable paging = PageRequest.of(page, size, Sort.by("totalMaintenanceCard").descending());
 
         if (!sortBy.isEmpty()) {
-            paging = PageRequest.of(page - 1, size, Sort.by(sortBy));
+            paging = PageRequest.of(page, size, Sort.by(sortBy));
             if (descending.equals("desc")) {
-                paging = PageRequest.of(page - 1, size, Sort.by(sortBy).descending());
+                paging = PageRequest.of(page, size, Sort.by(sortBy).descending());
             }
         }
         Page<User> map = userRepository.getAllUser(paging,search);

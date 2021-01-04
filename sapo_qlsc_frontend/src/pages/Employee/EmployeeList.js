@@ -22,8 +22,8 @@ const columns = [
 
     {
         title: 'Tên nhân viên',
-        dataIndex: 'full_name',
-        key: 'full_name',
+        dataIndex: 'fullName',
+        key: 'fullName',
         // width: '20%',
         sorter: true,
 
@@ -38,9 +38,9 @@ const columns = [
     },
     {
         title: 'SĐT',
-        dataIndex: 'phone_number',
+        dataIndex: 'phoneNumber',
         // width: '10%',
-        key: 'phone_number',
+        key: 'phoneNumber',
         sorter: true,
     },
     {

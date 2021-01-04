@@ -98,7 +98,9 @@ const AccessoryForm = (props) => {
     const handleFinish = () => {
         // Request body
         const data = new FormData();
-        data.append("image", state.image);
+        if(state.image !== null){
+            data.append("image", state.image);
+        }
         if (state.code !== "") {
             data.append("code", state.code.toLowerCase());
         }
@@ -136,8 +138,8 @@ const AccessoryForm = (props) => {
     }
     useEffect(() => {
         if (props.product.id !== undefined) {
-            setState(props.product);
-            setPreviewImage(`http://localhost:8080/admin/products/image/${props.product.image}`);
+            setState({...props.product,image:null});
+            setPreviewImage(`http://localhost:8762/image/image/${props.product.image}`);
             if (props.product.image !== null) {
                 setIsImageSet(true);
             }

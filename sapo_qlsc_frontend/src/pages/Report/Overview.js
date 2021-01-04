@@ -77,10 +77,7 @@ const Overview = (props) => {
         }
     ]
     const dataCustomer = [
-        {
-            icon: iconCustomer,
-            title: totalCustomerToday + ' Khách đã thêm',
-        },
+    
         {
             icon: maintenace_card,
             title: totalMaintenanceCardToday + ' Phiếu đã tạo',

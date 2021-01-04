@@ -30,6 +30,9 @@ public class MaintenanceCardDetail extends BaseEntity{
     @Column(name = "product_type")
     private byte productType;
 
+    @Column(name = "product_price_per_unit")
+    private BigDecimal productPricePerUnit;
+
     @Column(name = "status")
     private byte status;
 
@@ -44,6 +47,14 @@ public class MaintenanceCardDetail extends BaseEntity{
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "maintenanceCardDetail",fetch = FetchType.LAZY)
     private List<MaintenanceCardDetailStatusHistory> maintenanceCardDetailStatusHistories;
+
+    public BigDecimal getProductPricePerUnit() {
+        return productPricePerUnit;
+    }
+
+    public void setProductPricePerUnit(BigDecimal productPricePerUnit) {
+        this.productPricePerUnit = productPricePerUnit;
+    }
 
     public List<MaintenanceCardDetailStatusHistory> getMaintenanceCardDetailStatusHistories() {
         return maintenanceCardDetailStatusHistories;

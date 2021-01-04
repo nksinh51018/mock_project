@@ -117,10 +117,10 @@ const CustomerInfo = (props) => {
                         </Row>
                     </Col>
                     <Col span={8} style={{marginLeft: -23}}>
-                        <Row style={{ marginBottom: 6 }}>
+                        {/* <Row style={{ marginBottom: 6 }}>
                             <Col span={8}>Nợ hiện tại</Col>
                             <Col span={16}>: {customerItem !== undefined ? customerItem.current_debt !== null ? formatMonney(customerItem.current_debt) : null : null} đ</Col>
-                        </Row>
+                        </Row> */}
                         <Row style={{ marginBottom: 6, marginTop: 8 }}>
                             <Col span={8}>Ngày tạo</Col>
                             <Col span={16}>: {customerItem !== undefined ? formatDate(customerItem.createdDate) : null}</Col>

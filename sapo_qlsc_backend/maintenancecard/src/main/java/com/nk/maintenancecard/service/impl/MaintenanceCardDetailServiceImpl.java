@@ -79,6 +79,8 @@ public class MaintenanceCardDetailServiceImpl implements MaintenanceCardDetailSe
             }
             if(check){
                 maintenanceCard.setWorkStatus((byte) 2);
+                ProducerRecord<String, String> record2 = new ProducerRecord<String, String>("qlsc_user", maintenanceCard.getRepairmanId()+"","-1" );
+                kafkaTemplate.send(record2);
             }
             else{
                 maintenanceCard.setWorkStatus(status);

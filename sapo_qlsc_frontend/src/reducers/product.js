@@ -8,6 +8,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case productConstants.FETCH_PRODUCT_SUCCESS:
+            console.log(action.payload.data);
             state = action.payload.data;
             return { ...state };
         case productConstants.FETCH_PRODUCT_FAIL:

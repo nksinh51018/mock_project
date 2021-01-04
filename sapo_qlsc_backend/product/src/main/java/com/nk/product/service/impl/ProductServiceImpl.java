@@ -235,7 +235,7 @@ public class ProductServiceImpl implements ProductService {
         String type = productRequest.getType();
         Product product = new Product();
         // Upload Image
-        if (fileOptional.isPresent()) {
+        if (fileOptional != null && fileOptional.isPresent()) {
             MultipartFile file = fileOptional.get();
 //            Image image = new Image(file);
             String imageName = imageService.insertImage(file);
@@ -265,13 +265,13 @@ public class ProductServiceImpl implements ProductService {
             throw new Exception("This name has already existed");
         }
         product.setName(name);
-        if (quantityOptional.isPresent()) {
+        if (quantityOptional != null && quantityOptional.isPresent()) {
             product.setQuantity(Integer.parseInt(quantityOptional.get()));
         }
-        if (unitOptional.isPresent()) {
+        if (unitOptional != null && unitOptional.isPresent()) {
             product.setUnit(unitOptional.get());
         }
-        if (pricePerUnitOptional.isPresent()) {
+        if (pricePerUnitOptional != null && pricePerUnitOptional.isPresent()) {
             product.setPricePerUnit(new BigDecimal(pricePerUnitOptional.get()));
         }
         product.setDescription(description);
@@ -314,7 +314,7 @@ public class ProductServiceImpl implements ProductService {
         String type = productRequest.getType();
         int quantityNum = product.getQuantity();
         // Upload new Image (OPTIONAL)
-        if (fileOptional.isPresent()) {
+        if (fileOptional != null && fileOptional.isPresent()) {
             MultipartFile file = fileOptional.get();
             String[] types = {"image/png", "image/jpg", "image/jpeg"};
             // Upload image and update product image name
@@ -338,7 +338,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // Update product info
-        if (quantityOptional.isPresent()) {
+        if (quantityOptional!=null && quantityOptional.isPresent()) {
             String quantity = quantityOptional.get();
             if (!StringUtils.isNumeric(quantity)) {
                 throw new NotANumberException("The entered quantity is not a number");
@@ -350,7 +350,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new NotANumberException("The entered quantity is not a number");
             }
         }
-        if (pricePerUnitOptional.isPresent()) {
+        if (pricePerUnitOptional!=null && pricePerUnitOptional.isPresent()) {
             if (!StringUtils.isNumeric(pricePerUnitOptional.get())) {
                 throw new NotANumberException("The entered price is not a number");
             }
@@ -360,11 +360,11 @@ public class ProductServiceImpl implements ProductService {
             throw new Exception("This name has already existed");
         }
         product.setName(name);
-        if (unitOptional.isPresent()) {
+        if (unitOptional!=null && unitOptional.isPresent()) {
             String unit = unitOptional.get();
             product.setUnit(unit);
         }
-        if (pricePerUnitOptional.isPresent()) {
+        if (pricePerUnitOptional!= null && pricePerUnitOptional.isPresent()) {
             String pricePerUnit = pricePerUnitOptional.get();
             product.setPricePerUnit(new BigDecimal((Integer.parseInt(pricePerUnit))));
         }

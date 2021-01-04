@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -125,5 +126,28 @@ public class MaintenanceCardController {
     public ResponseEntity<Boolean> deleteMaintenanceCard(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException, NotEnoughProductException, JsonProcessingException {
         boolean check = maintenanceCardService.deleteMaintenanceCard(id);
         return new ResponseEntity(check, HttpStatus.OK);
+    }
+
+    @PutMapping("maintenanceCards/returnDate/{id}")
+    public ResponseEntity<Boolean> setReturnDate(@PathVariable Long id) throws NotFoundException, NotFoundRepairmanException, NotEnoughProductException, JsonProcessingException {
+        MaintenanceCardDTO maintenanceCardDTO = maintenanceCardService.setReturnDate(id);
+        return new ResponseEntity(maintenanceCardDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("users/maintenanceCards/{userid}")
+    public ResponseEntity<Map<String,Object>> getMaintenanceCardByUserId(@RequestParam(name = "pageNum", defaultValue = "1", required = false) int pageNum,
+                                                                         @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
+                                                                         @RequestParam(value = "sortBy", defaultValue = "") String sortBy,
+                                                                         @RequestParam(value = "descending", defaultValue = "false") boolean descending,
+                                                                         @RequestParam(value = "code", defaultValue = "") String code,
+                                                                         @PathVariable(value = "userid",required = true)Long userid,
+                                                                         @RequestParam(value = "payStatus",required = false,defaultValue = "0,1") byte[] payStatus,
+                                                                         @RequestParam(value = "workStatus",required = false,defaultValue = "0,1,2") byte[] workStatus
+    ) throws NotFoundException{
+
+
+
+        Map<String,Object> map =maintenanceCardService.getMaintenanceCardByRepairMan(pageNum,pageSize,sortBy,descending,userid,code,payStatus,workStatus);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }

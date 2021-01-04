@@ -23,6 +23,7 @@ import Login from "./pages/Login/index"
 import ProductsList from './pages/Products/ProductsList';
 import CreateProduct from './pages/Products/CreateProduct';
 import UpdateProduct from './pages/Products/UpdateProduct';
+import ProductHistory from './pages/Products/History';
 const routes = [
     {
         to: '/',
@@ -142,6 +143,12 @@ const routes = [
         to: '/products',
         exact: true,
         main: () => <ProductsList />,
+        role: [3]
+    },
+    {
+        to: '/products/history',
+        exact: true,
+        main: () => <ProductHistory />,
         role: [3]
     },
     {

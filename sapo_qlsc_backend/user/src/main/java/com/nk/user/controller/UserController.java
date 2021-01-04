@@ -34,7 +34,7 @@ public class UserController {
     @GetMapping("/admin/users")
     public ResponseEntity<Map<String, Object>> getAllUsers(@RequestParam(name = "pageNum", defaultValue = "1", required = false) int pageNum,
                                                            @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize,
-                                                           @RequestParam(value = "sortBy", defaultValue = "modified_date") String sortBy,
+                                                           @RequestParam(value = "sortBy", defaultValue = "modifiedDate") String sortBy,
                                                            @RequestParam(value = "descending", defaultValue = "desc") String descending,
                                                            @RequestParam(value = "param", defaultValue = "") String param) {
 

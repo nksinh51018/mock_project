@@ -82,23 +82,7 @@ const Customer = (props) => {
         //     ),
         //     ellipsis: true
         // },
-        {
-            title: 'Phiếu chưa thanh toán',
-            dataIndex: 'totalNotPay',
-            key: 'totalNotPay',
-
-            //dang bi loi
-            // filters: [
-            //     { text: 'Đã thanh toán', value: '1' },
-            //     { text: 'Chưa thanh toán', value: '0' }
-            // ],
-            render: totalNotPay => (
-                <>
-                <div style={{paddingLeft: 47}}>{totalNotPay} phiếu</div>                
-                </>
-            ),
-            ellipsis: true
-        },
+    
         // {
         //     title: "Hành động",
         //     dataIndex: 'action',

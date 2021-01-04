@@ -54,9 +54,9 @@ public interface MaintenanceCardRepository extends JpaRepository<MaintenanceCard
 	@Query(value = "SELECT SUM(money) as totalMoney FROM payment_histories where modified_date BETWEEN ?1 AND ?2", nativeQuery = true)
     BigDecimal getTotalMoney(Date startDate, Date endDate);
 
-    @Query(value = "select sum( distinct price)- sum(money) as sono from maintenance_cards as m\n" +
+    @Query(value = "select sum( price)- sum(money) as sono from maintenance_cards as m\n" +
             " left join payment_histories as p on p.maintenance_card_id  = m.id\n" +
-            "where m.pay_status = 0 and m.modified_date BETWEEN ?1 AND ?2 ;", nativeQuery = true)
+            "where m.modified_date BETWEEN ?1 AND ?2 ;", nativeQuery = true)
     BigDecimal getTotalLiabilities(Date startDate, Date endDate);
 
     @Query(value = "SELECT COUNT(mc.id) as totalMoney FROM maintenance_cards mc where mc.created_date BETWEEN ?1 AND ?2", nativeQuery = true)

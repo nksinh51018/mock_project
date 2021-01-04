@@ -17,7 +17,7 @@ import {
     searchCustomerMaintenanceCardSaga, createCustomerRepairSaga, searchRepairmanSaga, searchProductSaga,
     createMaintenanceCardSaga, updateListCustomerMaintenanceCardSaga, updateListRepairmanMaintenanceCardSaga, updateListProductSaga,
     getMaintenanceCardByIdSaga, updateMaintenanceCardSaga, completeCardSaga, updateStatusDetailSaga, createPaymentHistorySaga, deleteMaintenanceCardSaga,
-    createMaintenanceCardWithCustomerSaga,getPlateNumberByCustomerSaga
+    createMaintenanceCardWithCustomerSaga,getPlateNumberByCustomerSaga, getHmacsaga, getMaintenanceCardByHmacSaga
 } from './MaintenanceCardAdd'
 
 import { fetchEmployeeSaga, deleteEmployeeSaga, getItemByIdSaga, updateEmployeeSaga, insertEmployeeSaga, changePasswordUserSaga, getListMaintanceCardByUserIdSaga } from "./Employee"
@@ -32,8 +32,12 @@ import { getPaymentHistoriesSaga } from "./paymentHistories";
 
 import * as productsConstants from '../constants/products';
 import * as productConstants from '../constants/product';
+import * as messageConstants from '../constants/message';
+import * as historyConstants from '../constants/history';
 import { deleteProductsSaga, getProductsSaga } from './Products';
 import { getProductSaga } from './Product';
+import { getListMessages,readMessage } from './Messages';
+import { getProductHistorySaga} from './history';
 
 function* rootSaga() {
     yield takeLatest(MaintenanceCardAddType.SEARCH_CUSTOMER, searchCustomerMaintenanceCardSaga)
@@ -92,6 +96,11 @@ function* rootSaga() {
     yield takeLatest(paymentConstants.FETCH_PAYMENT_HISTORIES_BY_IDCUSTOMER, getPaymentHistoriesSaga);
     yield takeLatest(productsConstants.DELETE_PRODUCTS, deleteProductsSaga);
     yield takeLatest(productConstants.FETCH_PRODUCT, getProductSaga);
+    yield takeLatest(messageConstants.FETCH_MESSAGES, getListMessages);
+    yield takeLatest(messageConstants.READ_MESSAGE, readMessage);
+    yield takeLatest(historyConstants.FETCH_PRODUCT_HISTORY, getProductHistorySaga);
+    yield takeLatest(MaintenanceCardAddType.GET_HMAC, getHmacsaga);
+    yield takeLatest(MaintenanceCardAddType.GET_MAINTENANCE_CARD_BY_HMAC, getMaintenanceCardByHmacSaga);
 }
 
 export default rootSaga;

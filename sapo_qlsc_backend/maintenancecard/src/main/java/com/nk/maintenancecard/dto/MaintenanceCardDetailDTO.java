@@ -11,33 +11,13 @@ public class MaintenanceCardDetailDTO extends BaseDTO {
 
     private MaintenanceCardDTO maintenanceCard;
 
-    private long productId;
-
-    private String productName;
-
-    private String productCode;
-
-    private String productImage;
-
-    private String productUnit;
-
-    private byte productType;
+    private ProductDTO product;
 
     private byte status;
 
     private BigDecimal price;
 
     private int quantity;
-
-    private List<MaintenanceCardDetailStatusHistoryDTO> maintenanceCardDetailStatusHistories;
-
-    public List<MaintenanceCardDetailStatusHistoryDTO> getMaintenanceCardDetailStatusHistories() {
-        return maintenanceCardDetailStatusHistories;
-    }
-
-    public void setMaintenanceCardDetailStatusHistories(List<MaintenanceCardDetailStatusHistoryDTO> maintenanceCardDetailStatusHistories) {
-        this.maintenanceCardDetailStatusHistories = maintenanceCardDetailStatusHistories;
-    }
 
     public MaintenanceCardDTO getMaintenanceCard() {
         return maintenanceCard;
@@ -47,52 +27,12 @@ public class MaintenanceCardDetailDTO extends BaseDTO {
         this.maintenanceCard = maintenanceCard;
     }
 
-    public long getProductId() {
-        return productId;
+    public ProductDTO getProduct() {
+        return product;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
-
-    public String getProductImage() {
-        return productImage;
-    }
-
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
-    }
-
-    public String getProductUnit() {
-        return productUnit;
-    }
-
-    public void setProductUnit(String productUnit) {
-        this.productUnit = productUnit;
-    }
-
-    public byte getProductType() {
-        return productType;
-    }
-
-    public void setProductType(byte productType) {
-        this.productType = productType;
+    public void setProduct(ProductDTO product) {
+        this.product = product;
     }
 
     public byte getStatus() {

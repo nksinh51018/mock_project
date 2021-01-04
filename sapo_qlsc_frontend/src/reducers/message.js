@@ -2,7 +2,7 @@ import * as messageConstants from '../constants/message';
 
 const initialState = {
     currentPage: 0,
-    content: [],
+    messages: [],
     totalItems: 0,
     totalPages: 0
 };
