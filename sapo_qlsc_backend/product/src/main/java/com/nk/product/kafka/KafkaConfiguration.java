@@ -15,41 +15,41 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConfiguration {
-
-    @Bean
-    public ConsumerFactory<String,String> consumerFactory(){
-        Map<String,Object> config = new HashMap<>();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"127.0.0.1:9092");
-        config.put(ConsumerConfig.GROUP_ID_CONFIG,"Group_id");
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        return new DefaultKafkaConsumerFactory<>(config);
-    }
-
-//    @Bean
-//    public ConsumerFactory<String, ProductDTO> productConsumerFactory(){
-//        Map<String,Object> config = new HashMap<>();
-//        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"127.0.0.1:9092");
-//        config.put(ConsumerConfig.GROUP_ID_CONFIG,"Group_json");
-//        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-//        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-//        config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-//        return new DefaultKafkaConsumerFactory<String, ProductDTO>(config,new StringDeserializer(),new JsonDeserializer<>(ProductDTO.class));
-//    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String,String> kafkaListenerContainerFactory(){
-        ConcurrentKafkaListenerContainerFactory concurrentKafkaListenerContainerFactory = new ConcurrentKafkaListenerContainerFactory();
-        concurrentKafkaListenerContainerFactory.setConsumerFactory(consumerFactory());
-        return concurrentKafkaListenerContainerFactory;
-    }
 //
 //    @Bean
-//    public ConcurrentKafkaListenerContainerFactory<String,ProductDTO> productDTOKafkaListenerContainerFactory(){
+//    public ConsumerFactory<String,String> consumerFactory(){
+//        Map<String,Object> config = new HashMap<>();
+//        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"127.0.0.1:9092");
+//        config.put(ConsumerConfig.GROUP_ID_CONFIG,"Group_id");
+//        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+//        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+//        return new DefaultKafkaConsumerFactory<>(config);
+//    }
+//
+////    @Bean
+////    public ConsumerFactory<String, ProductDTO> productConsumerFactory(){
+////        Map<String,Object> config = new HashMap<>();
+////        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"127.0.0.1:9092");
+////        config.put(ConsumerConfig.GROUP_ID_CONFIG,"Group_json");
+////        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+////        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+////        config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+////        return new DefaultKafkaConsumerFactory<String, ProductDTO>(config,new StringDeserializer(),new JsonDeserializer<>(ProductDTO.class));
+////    }
+//
+//    @Bean
+//    public ConcurrentKafkaListenerContainerFactory<String,String> kafkaListenerContainerFactory(){
 //        ConcurrentKafkaListenerContainerFactory concurrentKafkaListenerContainerFactory = new ConcurrentKafkaListenerContainerFactory();
-//        concurrentKafkaListenerContainerFactory.setConsumerFactory(productConsumerFactory());
+//        concurrentKafkaListenerContainerFactory.setConsumerFactory(consumerFactory());
 //        return concurrentKafkaListenerContainerFactory;
 //    }
+////
+////    @Bean
+////    public ConcurrentKafkaListenerContainerFactory<String,ProductDTO> productDTOKafkaListenerContainerFactory(){
+////        ConcurrentKafkaListenerContainerFactory concurrentKafkaListenerContainerFactory = new ConcurrentKafkaListenerContainerFactory();
+////        concurrentKafkaListenerContainerFactory.setConsumerFactory(productConsumerFactory());
+////        return concurrentKafkaListenerContainerFactory;
+////    }
 
 
 }

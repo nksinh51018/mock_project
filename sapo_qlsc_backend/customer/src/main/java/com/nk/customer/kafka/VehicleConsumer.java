@@ -31,7 +31,7 @@ public class VehicleConsumer {
 //    @Autowired
 //    private V
 
-    @KafkaListener(topics = {"qlsc_vehicle"},groupId = "customer")
+    @KafkaListener(topics = {"lhw3k9sy-vehicle"},groupId = "customer")
     @Transactional
     public void consume(@Payload String message, @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key) throws JsonProcessingException {
         System.out.println(message);

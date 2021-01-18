@@ -20,7 +20,7 @@ public class UserConsumer {
     @Autowired
     private UserRepository userRepository;
 
-    @KafkaListener(topics = {"qlsc_user"},groupId = "Group_id_1")
+    @KafkaListener(topics = {"lhw3k9sy-user"},groupId = "Group_id_1")
     @Transactional
     public void consume(@Payload String message, @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key) throws JsonProcessingException {
         System.out.println(message);
